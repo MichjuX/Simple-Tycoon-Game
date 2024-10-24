@@ -7,8 +7,8 @@ public class Chef {
 
     public Chef() {
         this.level = 1;
-        this.baseIncome = 10; // Starting income
-        this.upgradeCost = 50; // Cost to upgrade
+        this.baseIncome = 1; // Starting income
+        this.upgradeCost = 10; // Cost to upgrade
     }
 
     public double getIncome() {

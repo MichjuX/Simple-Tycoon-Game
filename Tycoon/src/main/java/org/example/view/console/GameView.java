@@ -15,26 +15,28 @@ import com.googlecode.lanterna.screen.TerminalScreen;
 public class GameView {
     private Player player;
     TerminalScreen screen;
+    TextGraphics textGraphics;
     public GameView(TerminalScreen screen) {
         this.screen = screen;
+        this.textGraphics = screen.newTextGraphics();
 
     }
-    public void display(String[] options, int selectedOption){
+    public void display(String[] options, int selectedOption, double balance, Player player) {
         try {
             screen.clear();
-            TextGraphics textGraphics = screen.newTextGraphics();
 
             for (int i = 0; i < options.length; i++) {
-                String displayText = (i == selectedOption) ? "> " + options[i] : "  " + options[i];
+                String displayText = (i == selectedOption) ? "> " + options[i] + " - Kup" : "  " + options[i];
 
-                // Ustawiamy kolor dla wybranej opcji
                 if (i == selectedOption) {
                     textGraphics.setForegroundColor(TextColor.ANSI.GREEN);
                 } else {
                     textGraphics.setForegroundColor(TextColor.ANSI.DEFAULT);
                 }
-                textGraphics.putString(1, i, displayText); // Rysowanie tekstu na ekranie
+                textGraphics.putString(1, i+1, displayText); // Rysowanie tekstu na ekranie
             }
+            textGraphics.putString(60, 1, "Stan konta: " + balance + "$");
+            textGraphics.putString(60, 2, player.getCurrentProfit() + "$/s");
             screen.refresh();
 
 

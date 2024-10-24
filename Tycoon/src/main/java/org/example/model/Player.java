@@ -5,56 +5,41 @@ import java.util.List;
 
 public class Player {
     private double balance;
+    private double currentProfit = 0;
+    private int prefixNumber = 0;
+    private String[] prefixList = {"", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "O", "N", "D"};
     private List<Chef> chefs;
 
     public Player() {
         this.balance = 100; // Starting balance
         chefs = new ArrayList<>();
-        chefs.add(new Chef()); // Initially one chef
+        chefs.add(new Chef());
     }
 
-    public double getBalance() {
+    public List<Object> getBalancePrefix(){
+        List<Object> list = new ArrayList<>();
+        list.add(prefixNumber);
+        list.add(prefixList);
+        return list;
+    }
+    public double getBalance(){
         return balance;
     }
-
-    public void increaseBalance(double amount) {
-        System.out.println("Before increase, balance: $" + balance); // Debug print
-        this.balance += amount;
-        System.out.println("After increase, balance: $" + balance); // Debug print
+    public void reduceBalance(double amount){
+        balance -= amount;
     }
 
-
-    public void upgradeChef(int index) {
-        Chef chef = chefs.get(index);
-        double cost = chef.getUpgradeCost();
-        if (balance >= cost) {
-            chef.upgrade();
-            balance -= cost;
+    public void increaseBalance(){
+        balance += currentProfit;
+        if(balance*1000>=1000000){
+            balance /= 1000;
+            prefixNumber++;
+            currentProfit /= 1000;
         }
     }
-
-    public double calculateTotalIncome() {
-        double income = chefs.stream().mapToDouble(Chef::getIncome).sum();
-        System.out.println("Calculated total income: $" + income); // Debug print
-        return income;
+    public double getCurrentProfit(){
+        return currentProfit;
     }
 
-
-    // Add this method to return the list of chefs
-    public List<Chef> getChefs() {
-        return chefs;
-    }
-
-    public String getChefLevel() {
-        return "Chef Level: " + chefs.get(0).getLevel();
-    }
-
-    public String getChefIncome() {
-        return "Income: $" + chefs.get(0).getIncome() + "/sec";
-    }
-
-    public void decreaseBalance(int i) {
-        balance -= i;
-    }
 }
 
