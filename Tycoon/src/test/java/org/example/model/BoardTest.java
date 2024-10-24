@@ -24,5 +24,4 @@ class BoardTest {
         board.set(999, 999, CellSymbol.X);
         assertThrows(Game.OutOfRangeException.class, () -> board.set(999, 999, CellSymbol.X));
     }
-
 }
