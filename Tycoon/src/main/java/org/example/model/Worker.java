@@ -1,14 +1,15 @@
 package org.example.model;
 
-public class Chef {
+public class Worker {
     private int level;
     private double baseIncome;
     private double upgradeCost;
 
-    public Chef() {
+    public Worker(double baseIncome, double upgradeCost, String name) {
         this.level = 1;
         this.baseIncome = 1; // Starting income
-        this.upgradeCost = 10; // Cost to upgrade
+
+        this.upgradeCost = 50; // Cost to upgrade
     }
 
     public double getIncome() {

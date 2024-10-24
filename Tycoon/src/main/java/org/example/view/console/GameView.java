@@ -2,20 +2,13 @@ package org.example.view.console;
 
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.gui2.*;
-import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
 import org.example.model.Player;
-import com.googlecode.lanterna.gui2.Label;
-
-import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
-import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.screen.TerminalScreen;
 
 public class GameView {
-    private Player player;
     TerminalScreen screen;
     TextGraphics textGraphics;
+    private String[] prefixList = {"", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "O", "N", "D"};
     public GameView(TerminalScreen screen) {
         this.screen = screen;
         this.textGraphics = screen.newTextGraphics();
@@ -26,8 +19,18 @@ public class GameView {
             screen.clear();
 
             for (int i = 0; i < options.length; i++) {
-                String displayText = (i == selectedOption) ? "> " + options[i] + " - Kup" : "  " + options[i];
-
+                String displayText = "";
+                if(i<4) {
+                    if(player.getWorkers().get(i).getLevel() == 1) {
+                        displayText = (i == selectedOption) ? "> " + options[i] + " - Kup za " + player.getWorkers().get(i).getUpgradeCost() + "$" : "  " + options[i];
+                    }
+                    else if(player.getWorkers().get(i).getLevel() > 1) {
+                        displayText = (i == selectedOption) ? "> " + options[i] + " - Ulepsz lvl " + player.getWorkers().get(i).getLevel() + " - za " + player.getWorkers().get(i).getUpgradeCost() + "$" : "  " + options[i];
+                    }
+                }
+                else {
+                    displayText = (i == selectedOption) ? "> " + options[i] : "  " + options[i];
+                }
                 if (i == selectedOption) {
                     textGraphics.setForegroundColor(TextColor.ANSI.GREEN);
                 } else {
@@ -35,8 +38,11 @@ public class GameView {
                 }
                 textGraphics.putString(1, i+1, displayText); // Rysowanie tekstu na ekranie
             }
-            textGraphics.putString(60, 1, "Stan konta: " + balance + "$");
-            textGraphics.putString(60, 2, player.getCurrentProfit() + "$/s");
+            textGraphics.putString(60, 1, String.format("Stan konta: %.2f%s$", balance, prefixList[player.getBalancePrefix()]));
+
+
+            textGraphics.putString(60, 2, String.format("%.2f%s$/s", player.getCurrentProfit(), prefixList[player.getProfitPrefix()]));
+
             screen.refresh();
 
 

@@ -4,7 +4,6 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import org.example.model.Player;
-import org.example.model.Chef;
 import org.example.view.console.GameView;
 
 import java.io.IOException;
@@ -16,12 +15,12 @@ public class GameController {
     private Screen screen;
     String[] options = {
             "Kucharz 1",
-            "Opcja 2",
-            "Opcja 3",
+            "Kucharz 2",
+            "Kelner 1",
+            "Kelner 2",
             "Wyjście"};
 
     int selectedOption = 0;
-    List<Chef> chefs;
 
     public GameController(GameView view, Screen screen) {
         this.view = view;
@@ -42,17 +41,11 @@ public class GameController {
                 } else if (keyStroke.getKeyType() == KeyType.ArrowDown) {
                     selectedOption = (selectedOption + 1) % options.length;
                 } else if (keyStroke.getKeyType() == KeyType.Enter) {
-                    switch (selectedOption) {
-                        case 0:
-                            System.out.println("Ulepszono kucharza");
-                            break;
-                        case 1:
-                            System.out.println("Wybrano Opcję 2");
-                            break;
-                        case 2:
-                            System.out.println("Zamykam program...");
-                            screen.close();
-                            return; // Kończymy program
+                    if(selectedOption <= 4){
+                        upgrade(selectedOption);
+                        System.out.println(player.getWorkers().get(selectedOption).getLevel());
+                    } else {
+                        return;
                     }
                 }
                 // Nie wywołujemy tu display, to będzie robione w innym wątku
@@ -62,15 +55,8 @@ public class GameController {
         }
     }
 
-    private void upgrade(Object object) {
-        if (object instanceof Chef) {
-            Chef chef = (Chef) object;
-            double cost = chef.getUpgradeCost();
-            if (player.getBalance() >= cost) {
-                chef.upgrade();
-                player.reduceBalance(cost);
-            }
-        }
+    private void upgrade(int index) {
+            player.upgradeWorker(index);
     }
 
     // Metoda do uruchamiania wątku odświeżającego ekran
