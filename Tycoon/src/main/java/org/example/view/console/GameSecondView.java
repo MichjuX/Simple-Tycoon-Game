@@ -2,17 +2,19 @@ package org.example.view.console;
 
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
+import com.googlecode.lanterna.screen.TerminalScreen;
 import org.example.controllers.QueueController;
 import org.example.model.Player;
-import com.googlecode.lanterna.screen.TerminalScreen;
 
 import java.util.Queue;
 
-public class GameView {
+public class GameSecondView {
     TerminalScreen screen;
     TextGraphics textGraphics;
     private final String[] _prefixList = {"", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "O", "N", "D"};
-    public GameView(TerminalScreen screen) {
+    private final String[] _workerNames = {"Kucharz", "Kelner", "Szef kuchni", "Marketingowiec"};
+    private final int[] _workerCosts = {50, 50, 500, 5000};
+    public GameSecondView(TerminalScreen screen) {
         this.screen = screen;
         this.textGraphics = screen.newTextGraphics();
 
@@ -21,51 +23,19 @@ public class GameView {
         try {
             screen.clear();
 
-            for (int i = 0; i < player.getWorkersCount()+1; i++) {
+            for (int i = 0; i < _workerNames.length+1; i++) {
                 String displayText = "";
                 if(i==0){
                     displayText = (i ==selectedOption) ? "> "
-                            + "Zatrudnij" : " Zatrudnij";
+                            + "Wróć" : " Wróć";
                 }
-                if(i>0 && i<=player.getWorkersCount()) {
-                    if(player.get_workers().get(i-1).getLevel() == 1) {
+                if(i>0 && i<=_workerNames.length) {
                         displayText = (i == selectedOption) ? "> "
-                                + player.getWorkerName(i-1)
-                                + " - Ulepsz lvl "
-                                + player.get_workers().get(i-1).getLevel()
-                                + " - za "
-                                + player.get_workers().get(i-1).getUpgradeCost()
-                                + "$"
-                                : "  "
-                                + player.getWorkerName(i-1)
-                                + " lvl: "
-                                + player.get_workers().get(i-1).getLevel()
-                                + " - przychód: "
-                                + player.get_workers().get(i-1).getIncome()
-                                + "$/s";
-                    }
-                    else if(player.get_workers().get(i-1).getLevel() > 1) {
-                        displayText = (i == selectedOption) ? "> "
-                                + player.getWorkerName(i-1)
-                                + " - Ulepsz lvl "
-                                + player.get_workers().get(i-1).getLevel()
-                                + " - za "
-                                + player.get_workers().get(i-1).getUpgradeCost()
-                                + "$"
-                                : "  "
-                                + player.getWorkerName(i-1)
-                                + " lvl: "
-                                + player.get_workers().get(i-1).getLevel()
-                                + " - przychód: "
-                                + player.get_workers().get(i-1).getIncome()
-                                + "$/s";
-                    }
-                }
-                else {
-//                    displayText = (i == selectedOption) ? "> "
-//                            + player.getWorkerName(i)
-//                            : "  "
-//                            + player.getWorkerName(i);
+                                + _workerNames[i-1]
+                                + " - Zatrudnij za "
+                                + _workerCosts[i-1]
+                                + "$" : "  "
+                                + _workerNames[i-1] + " - " + _workerCosts[i-1] + "$";
                 }
                 if (i == selectedOption) {
                     textGraphics.setBackgroundColor(TextColor.ANSI.GREEN);
@@ -92,15 +62,15 @@ public class GameView {
 
             textGraphics.putString(55, 2,
                     String.format("%.2f%s$/klienta",
-                    player.getCurrentProfit(),
-                    _prefixList[player.getProfitPrefix()]));
+                            player.getCurrentProfit(),
+                            _prefixList[player.getProfitPrefix()]));
 
             textGraphics.putString(55, 3,
                     String.format("Gotowe dania: %d",
-                    queueController.getQueueSize()));
+                            queueController.getQueueSize()));
             textGraphics.putString(55, 4,
                     String.format("Klienci w kolecje: %d",
-                    queueController.getClientCount()
+                            queueController.getClientCount()
                     ));
             textGraphics.setBackgroundColor(TextColor.ANSI.DEFAULT);
 
@@ -110,6 +80,9 @@ public class GameView {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public int getWorkersCount(){
+        return _workerNames.length;
     }
 }
 
