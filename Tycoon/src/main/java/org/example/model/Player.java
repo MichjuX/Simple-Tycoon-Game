@@ -112,7 +112,6 @@ public class Player {
             int temp = Math.abs(rn.nextInt()%waitTime);
             System.out.println("temp: " + temp);
             return temp;
-
         }
         return Math.abs(rn.nextInt()%waitTime/_workersCount[id]);
     }

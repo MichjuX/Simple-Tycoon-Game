@@ -5,8 +5,10 @@ import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import org.example.model.Player;
 import org.example.savegame.SaveController;
+import org.example.view.console.GameMenu;
 import org.example.view.console.GameSecondView;
 import org.example.view.console.GameView;
+import org.example.view.console.LeaveGame;
 
 import java.io.IOException;
 import java.util.Random;
@@ -16,58 +18,108 @@ public class GameController {
     private Player player;
     private GameView _view1;
     private GameSecondView _view2;
+    private GameMenu _menu;
+    private LeaveGame _leave;
     private QueueController queueController;
     private Screen screen;
     private int currentPage = 0;
     private int _selectedOption = 0;
+    private boolean paused = false;
 
-    public GameController(GameView view, GameSecondView view2, Screen screen) {
+    public GameController(GameView view, GameSecondView view2, GameMenu menu, LeaveGame leave, Screen screen) {
         this._view1 = view;
         this._view2 = view2;
+        this._menu = menu;
+        this._leave = leave;
         this.screen = screen;
         this.player = new Player();
         this.queueController = new QueueController(player);
         this.saveController = new SaveController(_view1, _view2, player, queueController);
-        startBalanceThread();
-        startRefreshThread();
-        startDishThread();
-        startClientThread();
     }
 
     public void startGameLoop() {
         // Inicjalizacja gry (menu)
         boolean load = false;
-//        while(true){
-//            try {
-//
-//                KeyStroke keyStroke = screen.readInput();
-//                if(keyStroke.getKeyType() == KeyType.ArrowUp){
-//                    minus();
-//                }
-//                else if(keyStroke.getKeyType() == KeyType.ArrowDown){
-//                    plus();
-//                }
-//                else if(keyStroke.getKeyType() == KeyType.Enter){
-//                    load = true;
-//                    break;
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        while(true){
+            try {
+                _menu.display(_selectedOption);
+                KeyStroke keyStroke = screen.readInput();
+                if(keyStroke.getKeyType() == KeyType.ArrowUp){
+                    basic_minus();
+                }
+                else if(keyStroke.getKeyType() == KeyType.ArrowDown){
+                    basic_plus();
+                }
+                else if(keyStroke.getKeyType() == KeyType.Enter){
+                    if (_selectedOption == 0) {
+                        System.out.println("Wczytaj grę");
+                        load = true;
+                        break;
+                    }
+                    else if (_selectedOption == 1) {
+                        System.out.println("Nowa gra");
+                        break;
+                    }
+                    else if (_selectedOption == 2) {
+                        System.out.println("Wyjdź");
+                        screen.stopScreen();
+                        System.exit(0);
+                        return;
+                    }
+                    break;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         _selectedOption = 0;
         if(load){
             saveController.loadGame();
         }
+        startBalanceThread();
+        startRefreshThread();
+        startDishThread();
+        startClientThread();
         while (true) {
             try {
                 KeyStroke keyStroke = screen.readInput();
-                if (keyStroke.getKeyType() == KeyType.Escape) {
-                    saveController.saveGame();
-                    System.out.printf("Zamykam grę");
-                    screen.stopScreen();
-                    System.exit(0);
-                    return;
+                if (keyStroke.getKeyType() == KeyType.Escape) { // Spaghetti time :))))) Nie wiem jak to zrobić inaczej
+                    _selectedOption = 0;
+                    while(true) {
+                        currentPage = 2;
+                        keyStroke = screen.readInput();
+                        if (keyStroke.getKeyType() == KeyType.ArrowUp) {
+                            basic_minus();
+                        } else if (keyStroke.getKeyType() == KeyType.ArrowDown) {
+                            basic_plus();
+                        } else if (keyStroke.getKeyType() == KeyType.Escape) {
+                            currentPage = 0;
+                            break;
+                        } else if (keyStroke.getKeyType() == KeyType.Enter) {
+                            if (_selectedOption == 0) {
+                                System.out.println("Zapisz i wyjdź");
+                                saveController.saveGame();
+                                System.out.printf("Zamykam grę");
+                                screen.stopScreen();
+                                System.exit(0);
+                                break;
+                            } else if (_selectedOption == 1) {
+                                System.out.println("Wyjdź bez zapisu");
+                                screen.stopScreen();
+                                System.exit(0);
+                                break;
+                            } else if (_selectedOption == 2) {
+                                System.out.println("Anuluj");
+                                currentPage = 0;
+                                break;
+                            }
+                            break;
+                        }
+                    }
+//                    saveController.saveGame();
+//                    System.out.printf("Zamykam grę");
+//                    screen.stopScreen();
+//                    System.exit(0);
                 } else if (keyStroke.getKeyType() == KeyType.ArrowUp) {
                     System.out.println("gura");
                     minus();
@@ -115,6 +167,24 @@ public class GameController {
         }
     }
 
+    private void basic_plus() {
+        if (_selectedOption < 2) {
+            _selectedOption++;
+        }
+        else {
+            _selectedOption = 0;
+        }
+    }
+
+    private void basic_minus() {
+        if (_selectedOption > 0) {
+            _selectedOption--;
+        }
+        else {
+            _selectedOption = 2;
+        }
+    }
+
     private void plus(){ // strzałka w dół
         if(_selectedOption < player.getWorkersCount() && currentPage == 0){
             _selectedOption++;
@@ -151,8 +221,11 @@ public class GameController {
                     if(currentPage == 1){
                         _view2.display(_selectedOption, getBalance(), player, queueController);
                     }
-                    else {
+                    else if(currentPage == 0){
                         _view1.display(_selectedOption, getBalance(), player, queueController);
+                    }
+                    else {
+                        _leave.display(_selectedOption);
                     }
 
                 } catch (InterruptedException e) {
@@ -167,12 +240,14 @@ public class GameController {
     private void startBalanceThread() {
         new Thread(() -> {
             while (true) {
-                try {
-                    Thread.sleep(2000); // Uaktualniamy saldo co 1 sekundę
-                    queueController.giveDishToClient(); // Obsługujemy zamówienia
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt(); // Przerywamy wątek w przypadku przerwania
-                    break;
+                if(!paused) {
+                    try {
+                        Thread.sleep(2000); // Uaktualniamy saldo co 1 sekundę
+                        queueController.giveDishToClient(); // Obsługujemy zamówienia
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt(); // Przerywamy wątek w przypadku przerwania
+                        break;
+                    }
                 }
             }
         }).start();
@@ -181,7 +256,7 @@ public class GameController {
         new Thread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(player.calculateSpeed(0, 10000)); // Kucharz tworzy danie co 1 sekunde
+                    Thread.sleep(player.calculateSpeed(2, 10000)); // Kucharz tworzy danie co 1 sekunde
                     queueController.addDish(player.getPreciseWorkersCount()); // Dodajemy danie do kolejki
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Przerywamy wątek w przypadku przerwania
