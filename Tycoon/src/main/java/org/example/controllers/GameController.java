@@ -137,7 +137,7 @@ public class GameController {
                             upgrade(_selectedOption - 1);
                             System.out.println(player.get_workers().get(_selectedOption - 1).getLevel());
                         } else {
-                            System.out.print("no to koniec");
+                            System.out.print("no to koniec :(");
                             return;
                         }
                     }
@@ -149,7 +149,7 @@ public class GameController {
                         } else if (_selectedOption > 0 && _selectedOption < _view2.getWorkersCount() + 1) {
                             player.buy(_selectedOption - 1);
                         } else {
-                            System.out.print("no to koniec");
+                            System.out.print("no to koniec :(");
                             return;
                         }
                     }
@@ -167,7 +167,7 @@ public class GameController {
         }
     }
 
-    private void basic_plus() {
+    private void basic_plus() { // strzałka w dół
         if (_selectedOption < 2) {
             _selectedOption++;
         }
@@ -176,7 +176,7 @@ public class GameController {
         }
     }
 
-    private void basic_minus() {
+    private void basic_minus() { // strzałka w góre
         if (_selectedOption > 0) {
             _selectedOption--;
         }
@@ -242,7 +242,7 @@ public class GameController {
             while (true) {
                 if(!paused) {
                     try {
-                        Thread.sleep(2000); // Uaktualniamy saldo co 1 sekundę
+                        Thread.sleep(player.calculateSpeed(1, 10000)); // Kelner obsługuje klienta co X sekund
                         queueController.giveDishToClient(); // Obsługujemy zamówienia
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt(); // Przerywamy wątek w przypadku przerwania
@@ -256,7 +256,7 @@ public class GameController {
         new Thread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(player.calculateSpeed(2, 10000)); // Kucharz tworzy danie co 1 sekunde
+                    Thread.sleep(player.calculateSpeed(2, 10000)); // Kucharz tworzy danie co X sekund
                     queueController.addDish(player.getPreciseWorkersCount()); // Dodajemy danie do kolejki
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Przerywamy wątek w przypadku przerwania

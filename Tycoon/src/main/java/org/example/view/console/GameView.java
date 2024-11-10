@@ -75,9 +75,9 @@ public class GameView {
                     textGraphics.setBackgroundColor(TextColor.ANSI.DEFAULT);
                     textGraphics.setForegroundColor(TextColor.ANSI.DEFAULT);
                 }
-                if(i<player.getWorkersCount() && player.get_workers().get(i).getLevel() > 1) {
-                    textGraphics.setForegroundColor(TextColor.ANSI.GREEN);
-                }
+//                if(i<player.getWorkersCount() && player.get_workers().get(i).getLevel() > 1) {
+//                    textGraphics.setForegroundColor(TextColor.ANSI.GREEN);
+//                }
                 if(i<player.getWorkersCount() && player.get_workers().get(i).getLevel() > 1 && i == selectedOption) {
                     textGraphics.setForegroundColor(TextColor.ANSI.BLACK);
                 }

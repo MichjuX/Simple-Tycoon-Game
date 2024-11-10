@@ -20,6 +20,23 @@ public class GameMenu {
         try {
             screen.clear();
 
+            textGraphics.setBackgroundColor(TextColor.ANSI.DEFAULT);
+            textGraphics.setForegroundColor(TextColor.ANSI.DEFAULT);
+            textGraphics.putString(5, 5, "____    ___ ___________  ____ __ __ ____   ____ ____  ______ ");
+            textGraphics.putString(5, 6, "|    \\  /  _] ___/      |/    |  |  |    \\ /    |    \\|      | ");
+            textGraphics.putString(5, 7, "|  D  )/  [(   \\_|      |  o  |  |  |  D  )  o  |  _  |      |");
+            textGraphics.putString(5, 8, "|    /|    _]__  |_|  |_|     |  |  |    /|     |  |  |_|  |_|");
+            textGraphics.putString(5, 9, "|    \\|   [_/  \\ | |  | |  _  |  :  |    \\|  _  |  |  | |  | ");
+            textGraphics.putString(5, 10, "|  .  \\     \\    | |  | |  |  |     |  .  \\  |  |  |  | |  | ");
+            textGraphics.putString(5, 11, "|__|\\_|_____| ___| |__| |__|__|\\__,_|__|\\_|__|__|__|__| |__| ");
+            textGraphics.putString(5, 12, " ______ __ __    __  ___   ___  ____                           ");
+            textGraphics.putString(5, 13, "|      |  |  |  /  ]/   \\ /   \\|    \\                          ");
+            textGraphics.putString(5, 14, "|      |  |  | /  /|     |     |  _  |                         ");
+            textGraphics.putString(5, 15, "|_|  |_|  ~  |/  / |  O  |  O  |  |  |                         ");
+            textGraphics.putString(5, 16, "  |  | |___, /   \\_|     |     |  |  |                         ");
+            textGraphics.putString(5, 17, "  |  | |     \\     |     |     |  |  |                         ");
+            textGraphics.putString(5, 18, "  |__| |____/ \\____|\\___/ \\___/|__|__|                    ");
+
             for (int i = 0; i < 3; i++) {
                 String displayText = "";
                 if(i==0){

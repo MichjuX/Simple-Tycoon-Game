@@ -55,9 +55,9 @@ public class Player {
         _workers.add(worker);
     }
     public void upgradeWorker(int index){
-        if(_calculatePrice(_workers.get(index).getUpgradeCost()) <= balance){
-            currentProfit += _calculatePrice(_workers.get(index).getIncome());
-            balance -= _calculatePrice(_workers.get(index).getUpgradeCost());
+        if(calculatePrice(_workers.get(index).getUpgradeCost()) <= balance){
+            currentProfit += calculatePrice(_workers.get(index).getIncome());
+            balance -= calculatePrice(_workers.get(index).getUpgradeCost());
             _workers.get(index).upgrade();
         }
         else{
@@ -68,7 +68,7 @@ public class Player {
     public List<Worker> get_workers(){
         return _workers;
     }
-    private double _calculatePrice(double basePrice){
+    public double calculatePrice(double basePrice){
         for (int i = 1; i <= prefixNumber[1]; i++) {
             basePrice /= 1000;
         }
@@ -92,11 +92,11 @@ public class Player {
         }
     }
     private void buyHelper(int price, int income, int upgrade, String name, int num){
-        if (_calculatePrice(price) <= balance) {
+        if (calculatePrice(price) <= balance) {
             _workersCount[num]++;
             addWorker(new Worker(income, upgrade, name, _workersCount[num]));
-            balance -= _calculatePrice(price);
-            currentProfit+=_calculatePrice(income);
+            balance -= calculatePrice(price);
+            currentProfit+= calculatePrice(income);
         }
         else{
             System.out.println("Not enough money");

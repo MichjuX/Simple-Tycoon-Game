@@ -23,6 +23,14 @@ public class GameSecondView {
         try {
             screen.clear();
 
+            textGraphics.setBackgroundColor(TextColor.ANSI.DEFAULT);
+            textGraphics.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
+            textGraphics.putString(1, 10, "Kucharz - Gotuje dania");
+            textGraphics.putString(1, 11, "Kelner - Podaje dania dla klientów i odbiera płatność");
+            textGraphics.putString(1, 12, "Szef kuchni - Zwiększa tępo pracy kucharzy");
+            textGraphics.putString(1, 13, "Marketingowiec - Zwiększa tępo przychodzenia klientów");
+            textGraphics.setForegroundColor(TextColor.ANSI.DEFAULT);
+
             for (int i = 0; i < _workerNames.length+1; i++) {
                 String displayText = "";
                 if(i==0){

@@ -1,21 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="be202b04-5c15-4f6e-99b8-e5da5c141490" name="Changes" comment="" />
+    <list default="true" id="be202b04-5c15-4f6e-99b8-e5da5c141490" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tycoon/savegame.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Tycoon/savegame.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/controllers/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/controllers/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/controllers/WaiterController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/model/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/view/console/GameMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/view/console/GameMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/view/console/GameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/view/console/GameView.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 2
-}]]></component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2o7VwB3GS4QRAxHzyX4jNjFw95U" />
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.OpenDatabaseViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
     "last_opened_file_path": "C:/Users/mks20"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
