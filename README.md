@@ -23,4 +23,4 @@ Restauracja serwuje jedno pyszne danie, które przygotowywane jest nawet wtedy, 
   - Zatrudnienie kelnera: Zwiększa liczbę wydawanych dań;
   - Zatrudnienie szefa kuchni: Zwiększa prędkość produkcji dań;
   - Zatrudnienie marketingowca: Zwiększa zainteresowanie klientów lokalem (klienci częściej przychodzą).
-- ### UWAGA! Wartość gotowego dania po ulepszeniu pracownika nie zwiększa się! Wyprodukowane dania mają wartość taką jak w czasie ich produkcji. Gra wymaga poprawnego zarządzania ilością pracowników. W ten sposób zatrudnianie zbyt wielu kucharzy jest karane (dania stygną).
+- ### UWAGA! Wartość gotowego dania po ulepszeniu pracownika nie zwiększa się! Wyprodukowane dania mają wartość taką jak w czasie ich produkcji. Gra wymaga poprawnego zarządzania ilością pracowników. W ten sposób zatrudnianie zbyt wielu kucharzy lub zbyt małej ilości kelnerów jest karane (dania stygną).
