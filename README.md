@@ -1,6 +1,7 @@
 # Restaurant Tycoon
 ## Opis aplikacji
-Restaurant Tycoon to typowa gra tycoon gdzie gracz prowadzi swój własny biznes i rozwija własną markę aby zarabiać jak najwięcej pieniędzy.
+Restaurant Tycoon to typowa gra tycoon gdzie gracz prowadzi swój własny biznes i rozwija własną markę aby zarabiać jak najwięcej pieniędzy. 
+Restauracja serwuje jedno pyszne danie, które w celu zwiększenia zadowolenia klientów przygotowywane jest nawet wtedy, kiedy nikt nic nie zamówił - tak aby klient mógł otrzymać je od razu po zamówieniu. W ten sposób restuaracja dba o dobrą renomę i zadowolenie klientów - kto nie chciałby od razu dostać pysznego dania? 
 
 ## Funkcjonalności
 - Wiele widoków.
