@@ -22,4 +22,4 @@ Restaurant Tycoon to typowa gra tycoon gdzie gracz prowadzi swój własny biznes
   - Zatrudnienie kelnera: Zwiększa liczbę wydawanych dań;
   - Zatrudnienie szefa kuchni: Zwiększa prędkość produkcji dań;
   - Zatrudnienie marketingowca: Zwiększa zainteresowanie klientów lokalem (klienci częściej przychodzą).
-- ### UWAGA! Wartość gotowego dania po ulepszeniu pracownika nie zwiększa się! Wyprodukowane dania mają wartość taką jak w czasie ich produkcji.
+- ### UWAGA! Wartość gotowego dania po ulepszeniu pracownika nie zwiększa się! Wyprodukowane dania mają wartość taką jak w czasie ich produkcji. Gra wymaga poprawnego zarządzania ilością pracowników. W ten sposób zatrudnianie zbyt wielu kucharzy jest karane (dania stygną).
