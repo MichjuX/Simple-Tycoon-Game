@@ -13,8 +13,11 @@ Restaurant Tycoon to typowa gra tycoon gdzie gracz prowadzi swój własny biznes
 - Dynamiczne odświeżanie ekranu.
 - Dynamiczna zmiana przedrostka stanu konta oraz dochodu w celu zapobiegnięcia przekroczeniu maksymalnej wartości dla zmiennych.
 
-  ## Opis działania gry
-  - Gracz wybiera czy chce zacząć nową grę, czy chce wczytać istniejącą grę.
-  - Gracz startuje grę z pewnym stanem konta oraz jednym zatrudnionym kucharzem i kelnerem.
-  - W celu zwiększenia przychodu gracz może ulepszać pracowników (więcej $/s) lub zatrudniać nowych pracowników w celu przyspieszenia produkcji.
-  - Gracz może również zatrudnić specjalistę od marketingu w celu zwiększenia zainteresowania klientów restauracją.
+## Opis działania gry
+- Gracz wybiera czy chce zacząć nową grę, czy chce wczytać istniejącą grę.
+- Gracz startuje grę z pewnym stanem konta oraz jednym zatrudnionym kucharzem i kelnerem.
+- W celu zwiększenia przychodu gracz może ulepszać pracowników (więcej $/s) lub zatrudniać nowych pracowników w celu przyspieszenia produkcji:
+  - Zatrudnienie kucharza: Zwiększa liczbę produkowanych dań;
+  - Zatrudnienie kelnera: Zwiększa liczbę wydawanych dań;
+  - Zatrudnienie szefa kuchni: Zwiększa prędkość produkcji dań;
+  - Zatrudnienie marketingowca: Zwiększa zainteresowanie klientów lokalem (klienci częściej przychodzą).
