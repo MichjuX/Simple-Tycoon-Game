@@ -6,15 +6,16 @@ import java.util.Random;
 
 public class Player {
     private double balance;
-    private double currentProfit = 2;
+    private double currentProfit = 4;
     private int[] prefixNumber = {0,0};
     private List<Worker> _workers;
-    private int[] _workersCount = {1,0,0,0};
+    private int[] _workersCount = {1,1,0,0};
 
     public Player() {
-        this.balance = 10000; // Starting balance
+        this.balance = 1110; // Starting balance
         _workers = new ArrayList<>();
-        _workers.add(new Worker(2, 50, "Kucharz", 1));
+        _workers.add(new Worker(2, 50, "Kucharz", 0));
+        _workers.add(new Worker(2, 50, "Kelner", 0));
 
     }
 

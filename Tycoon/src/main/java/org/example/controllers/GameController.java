@@ -5,13 +5,13 @@ import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import org.example.model.Player;
 import org.example.savegame.SaveController;
+import org.example.service.NavigationHandler;
 import org.example.view.console.GameMenu;
 import org.example.view.console.GameSecondView;
 import org.example.view.console.GameView;
 import org.example.view.console.LeaveGame;
 
 import java.io.IOException;
-import java.util.Random;
 
 public class GameController {
     private SaveController saveController;
@@ -20,11 +20,14 @@ public class GameController {
     private GameSecondView _view2;
     private GameMenu _menu;
     private LeaveGame _leave;
-    private QueueController queueController;
+    QueueController queueController;
     private Screen screen;
     private int currentPage = 0;
-    private int _selectedOption = 0;
     private boolean paused = false;
+
+    private NavigationHandler menuNavigation;
+    private NavigationHandler mainNavigation;
+    private NavigationHandler hiringNavigation;
 
     public GameController(GameView view, GameSecondView view2, GameMenu menu, LeaveGame leave, Screen screen) {
         this._view1 = view;
@@ -35,246 +38,240 @@ public class GameController {
         this.player = new Player();
         this.queueController = new QueueController(player);
         this.saveController = new SaveController(_view1, _view2, player, queueController);
+
+        // Navigation handlers
+        this.menuNavigation = new NavigationHandler(3); // Menu główne ma 3 opcje
+        this.mainNavigation = new NavigationHandler(player.getWorkersCount() + 1); // Liczba pracowników + 1
+        this.hiringNavigation = new NavigationHandler(view2.getWorkersCount() + 1); // Liczba możliwych zatrudnień + 1
     }
 
     public void startGameLoop() {
-        // Inicjalizacja gry (menu)
         boolean load = false;
-        while(true){
+        while (true) {
             try {
-                _menu.display(_selectedOption);
+                _menu.display(menuNavigation.getSelectedOption());
                 KeyStroke keyStroke = screen.readInput();
-                if(keyStroke.getKeyType() == KeyType.ArrowUp){
-                    basic_minus();
-                }
-                else if(keyStroke.getKeyType() == KeyType.ArrowDown){
-                    basic_plus();
-                }
-                else if(keyStroke.getKeyType() == KeyType.Enter){
-                    if (_selectedOption == 0) {
+
+                if (keyStroke.getKeyType() == KeyType.ArrowUp) {
+                    menuNavigation.moveUp();
+                } else if (keyStroke.getKeyType() == KeyType.ArrowDown) {
+                    menuNavigation.moveDown();
+                } else if (keyStroke.getKeyType() == KeyType.Enter) {
+                    int selected = menuNavigation.getSelectedOption();
+                    if (selected == 0) {
                         System.out.println("Wczytaj grę");
                         load = true;
                         break;
-                    }
-                    else if (_selectedOption == 1) {
+                    } else if (selected == 1) {
                         System.out.println("Nowa gra");
                         break;
-                    }
-                    else if (_selectedOption == 2) {
+                    } else if (selected == 2) {
                         System.out.println("Wyjdź");
                         screen.stopScreen();
                         System.exit(0);
                         return;
                     }
-                    break;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        _selectedOption = 0;
-        if(load){
+
+        if (load) {
             saveController.loadGame();
         }
+        menuNavigation.resetSelection();
         startBalanceThread();
         startRefreshThread();
         startDishThread();
         startClientThread();
+
+        // Główna pętla gry
         while (true) {
             try {
                 KeyStroke keyStroke = screen.readInput();
-                if (keyStroke.getKeyType() == KeyType.Escape) { // Spaghetti time :))))) Nie wiem jak to zrobić inaczej
-                    _selectedOption = 0;
-                    while(true) {
-                        currentPage = 2;
-                        keyStroke = screen.readInput();
-                        if (keyStroke.getKeyType() == KeyType.ArrowUp) {
-                            basic_minus();
-                        } else if (keyStroke.getKeyType() == KeyType.ArrowDown) {
-                            basic_plus();
-                        } else if (keyStroke.getKeyType() == KeyType.Escape) {
-                            currentPage = 0;
-                            break;
-                        } else if (keyStroke.getKeyType() == KeyType.Enter) {
-                            if (_selectedOption == 0) {
-                                System.out.println("Zapisz i wyjdź");
-                                saveController.saveGame();
-                                System.out.printf("Zamykam grę");
-                                screen.stopScreen();
-                                System.exit(0);
-                                break;
-                            } else if (_selectedOption == 1) {
-                                System.out.println("Wyjdź bez zapisu");
-                                screen.stopScreen();
-                                System.exit(0);
-                                break;
-                            } else if (_selectedOption == 2) {
-                                System.out.println("Anuluj");
-                                currentPage = 0;
-                                break;
-                            }
-                            break;
-                        }
-                    }
-//                    saveController.saveGame();
-//                    System.out.printf("Zamykam grę");
-//                    screen.stopScreen();
-//                    System.exit(0);
-                } else if (keyStroke.getKeyType() == KeyType.ArrowUp) {
-                    System.out.println("gura");
-                    minus();
-                } else if (keyStroke.getKeyType() == KeyType.ArrowDown) {
-                    System.out.println("duł");
-                    plus();
-                }
-                else if (keyStroke.getKeyType() == KeyType.Enter) {
-                    if(currentPage == 0) { // kiedy jest pierwszy widok (ulepszanie)
-                        if (_selectedOption == 0) {
-                            System.out.println("zatrudniam");
-                            currentPage = 1;
-                            System.out.println(currentPage);
-                        } else if (_selectedOption > 0 && _selectedOption < player.getWorkersCount() + 1) {
-                            upgrade(_selectedOption - 1);
-                            System.out.println(player.get_workers().get(_selectedOption - 1).getLevel());
-                        } else {
-                            System.out.print("no to koniec :(");
-                            return;
-                        }
-                    }
-                    else if(currentPage == 1){ // kiedy jest drugi widok (zatrudnianie)
-                        if (_selectedOption == 0) {
-                            System.out.println("wracam");
-                            currentPage = 0;
-                            System.out.println(currentPage);
-                        } else if (_selectedOption > 0 && _selectedOption < _view2.getWorkersCount() + 1) {
-                            player.buy(_selectedOption - 1);
-                        } else {
-                            System.out.print("no to koniec :(");
-                            return;
-                        }
-                    }
-                    else if(currentPage == 2){
-                        System.out.println("menu główne");
-                        currentPage = 0;
-                        System.out.println(currentPage);
-                    }
-                }
-                System.out.println(_selectedOption);
-                    // Nie wywołujemy tu display, to będzie robione w innym wątku
+                handleGameInput(keyStroke);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private void basic_plus() { // strzałka w dół
-        if (_selectedOption < 2) {
-            _selectedOption++;
-        }
-        else {
-            _selectedOption = 0;
-        }
-    }
-
-    private void basic_minus() { // strzałka w góre
-        if (_selectedOption > 0) {
-            _selectedOption--;
-        }
-        else {
-            _selectedOption = 2;
+    private void handleGameInput(KeyStroke keyStroke) {
+        if (keyStroke.getKeyType() == KeyType.Escape) {
+            handlePauseMenu();
+        } else if (keyStroke.getKeyType() == KeyType.ArrowUp) {
+            handleNavigation("up");
+        } else if (keyStroke.getKeyType() == KeyType.ArrowDown) {
+            handleNavigation("down");
+        } else if (keyStroke.getKeyType() == KeyType.Enter) {
+            handleEnterAction();
         }
     }
 
-    private void plus(){ // strzałka w dół
-        if(_selectedOption < player.getWorkersCount() && currentPage == 0){
-            _selectedOption++;
-        }
-        else if(currentPage == 1 && _selectedOption < _view2.getWorkersCount()){
-            _selectedOption++;
-        }
-        else {
-            _selectedOption = 0;
-        }
-    }
-    private void minus(){ // strzałka w góre
-        if(_selectedOption > 0){
-            _selectedOption--;
-        }
-        else if(currentPage == 1){
-            _selectedOption = _view2.getWorkersCount();
-        }
-        else {
-            _selectedOption = player.getWorkersCount();
+    private void handleNavigation(String direction) {
+        if (currentPage == 0) {
+            if ("up".equals(direction)) {
+                mainNavigation.moveUp();
+            } else {
+                mainNavigation.moveDown();
+            }
+        } else if (currentPage == 1) {
+            if ("up".equals(direction)) {
+                hiringNavigation.moveUp();
+            } else {
+                hiringNavigation.moveDown();
+            }
         }
     }
+
+    private void handleEnterAction() {
+        if (currentPage == 0) {
+            int selected = mainNavigation.getSelectedOption();
+            if (selected == 0) {
+                System.out.println("Zatrudniam");
+                currentPage = 1;
+            } else if (selected > 0 && selected < player.getWorkersCount() + 1) {
+                upgrade(selected - 1);
+            } else {
+                System.out.print("No to koniec :(");
+            }
+        } else if (currentPage == 1) {
+            int selected = hiringNavigation.getSelectedOption();
+            if (selected == 0) {
+                System.out.println("Wracam");
+                currentPage = 0;
+            } else if (selected > 0 && selected < _view2.getWorkersCount() + 1) {
+                player.buy(selected - 1);
+            } else {
+                System.out.print("No to koniec :(");
+            }
+        }
+    }
+    private void handlePauseMenu() {
+        paused = true; // Wstrzymanie gry
+        menuNavigation.resetSelection(); // Resetowanie wyboru w menu pauzy
+        currentPage = 2; // Ustawienie strony na menu pauzy
+
+        while (paused) {
+            try {
+                // Wyświetlenie menu pauzy
+                _leave.display(menuNavigation.getSelectedOption());
+
+                // Oczekiwanie na wejście użytkownika
+                KeyStroke keyStroke = screen.readInput();
+
+                if (keyStroke.getKeyType() == KeyType.ArrowUp) {
+                    menuNavigation.moveUp(); // Nawigacja w górę
+                } else if (keyStroke.getKeyType() == KeyType.ArrowDown) {
+                    menuNavigation.moveDown(); // Nawigacja w dół
+                } else if (keyStroke.getKeyType() == KeyType.Escape) {
+                    paused = false; // Powrót do gry
+                    currentPage = 0; // Powrót do strony gry
+                } else if (keyStroke.getKeyType() == KeyType.Enter) {
+                    // Obsługa wybranej opcji w menu pauzy
+                    switch (menuNavigation.getSelectedOption()) {
+                        case 0: // "Zapisz i wyjdź"
+                            saveController.saveGame(); // Zapis gry
+                            stopGame(); // Zakończenie gry
+                            break;
+                        case 1: // "Wyjdź bez zapisu"
+                            stopGame(); // Zakończenie gry
+                            break;
+                        case 2: // "Anuluj"
+                            paused = false; // Powrót do gry
+                            currentPage = 0; // Powrót do strony gry
+                            break;
+                        default:
+                            throw new IllegalStateException("Nieznana opcja: " + menuNavigation.getSelectedOption());
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace(); // Obsługa błędu odczytu wejścia
+            }
+        }
+    }
+
+
+    private void stopGame() {
+        try {
+            screen.stopScreen(); // Zatrzymanie ekranu
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.exit(0); // Wyjście z gry
+    }
+
 
     private void upgrade(int index) {
-            player.upgradeWorker(index);
+        player.upgradeWorker(index);
     }
 
-    // Metoda do uruchamiania wątku odświeżającego ekran
-    private void startRefreshThread() {
-        new Thread(() -> {
-            while (true) {
-                try {
-                    Thread.sleep(100); // Odświeżamy ekran co 100ms
-                    if(currentPage == 1){
-                        _view2.display(_selectedOption, getBalance(), player, queueController);
-                    }
-                    else if(currentPage == 0){
-                        _view1.display(_selectedOption, getBalance(), player, queueController);
-                    }
-                    else {
-                        _leave.display(_selectedOption);
-                    }
-
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt(); // Przerywamy wątek w przypadku przerwania
-                    break;
-                }
-            }
-        }).start();
-    }
-
-    // Metoda do uruchamiania wątku aktualizującego saldo
+    private int waitTime = 5000;
     private void startBalanceThread() {
         new Thread(() -> {
             while (true) {
-                if(!paused) {
+                if (!paused) {
                     try {
-                        Thread.sleep(player.calculateSpeed(1, 10000)); // Kelner obsługuje klienta co X sekund
-                        queueController.giveDishToClient(); // Obsługujemy zamówienia
+                        // Kelner obsługuje klienta co X milisekund
+                        Thread.sleep(player.calculateSpeed(1, waitTime));
+                        queueController.giveDishToClient(); // Obsługujemy zamówienia klientów
                     } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt(); // Przerywamy wątek w przypadku przerwania
+                        Thread.currentThread().interrupt(); // Przerywamy wątek
                         break;
                     }
                 }
             }
         }).start();
     }
-    private void startDishThread() { // Wątek, który odpowiada za przygotowywanie dań
+
+
+    private void startRefreshThread() {
         new Thread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(player.calculateSpeed(2, 10000)); // Kucharz tworzy danie co X sekund
+                    Thread.sleep(100); // Odświeżanie ekranu co 100ms
+                    if (currentPage == 1) {
+                        _view2.display(hiringNavigation.getSelectedOption(), getBalance(), player, queueController);
+                    } else if (currentPage == 0) {
+                        _view1.display(mainNavigation.getSelectedOption(), getBalance(), player, queueController);
+                    } else {
+                        _leave.display(menuNavigation.getSelectedOption());
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt(); // Przerywamy wątek
+                    break;
+                }
+            }
+        }).start();
+    }
+
+
+    private void startDishThread() {
+        new Thread(() -> {
+            while (true) {
+                try {
+                    // Kucharz przygotowuje danie co X milisekund
+                    Thread.sleep(player.calculateSpeed(2, waitTime));
                     queueController.addDish(player.getPreciseWorkersCount()); // Dodajemy danie do kolejki
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt(); // Przerywamy wątek w przypadku przerwania
+                    Thread.currentThread().interrupt(); // Przerywamy wątek
                     break;
                 }
             }
         }).start();
     }
+
+
     private void startClientThread() {
-        Random random = new Random();
-        // Wątek, który odpowiada za przychodzenie klentów
         new Thread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(player.calculateSpeed(3, 5000)); // Kelner obsługuje klienta od 5 do 10 sekund
-                    queueController.addClient(); // Dodajemy danie do kolejki
+                    // Klient przychodzi co X milisekund
+                    Thread.sleep(player.calculateSpeed(3, waitTime));
+                    queueController.addClient(); // Dodajemy klienta do kolejki
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt(); // Przerywamy wątek w przypadku przerwania
+                    Thread.currentThread().interrupt(); // Przerywamy wątek
                     break;
                 }
             }
@@ -282,13 +279,6 @@ public class GameController {
     }
 
 
-
-    // Synchronizowany dostęp do salda
-//    private synchronized void incrementBalance() {
-//        player.increaseBalance();
-//    }
-
-    // Synchronizowany dostęp do salda
     public synchronized double getBalance() {
         return player.getBalance();
     }

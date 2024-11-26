@@ -5,14 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="be202b04-5c15-4f6e-99b8-e5da5c141490" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c118c46f-eb82-4bf4-8702-52913a5258b8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/c118c46f-eb82-4bf4-8702-52913a5258b8.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tycoon/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Tycoon/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tycoon/savegame.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Tycoon/savegame.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/controllers/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/controllers/GameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/controllers/WaiterController.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/model/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/view/console/GameMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/view/console/GameMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/view/console/GameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/Tycoon/src/main/java/org/example/view/console/GameView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tycoon/src/test/java/org/example/model/BoardTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Tycoon/src/test/java/org/example/model/PlayerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,18 +27,27 @@
   &quot;associatedIndex&quot;: 2
 }</component>
   <component name="ProjectId" id="2o7VwB3GS4QRAxHzyX4jNjFw95U" />
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenDatabaseViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/mks20"
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenDatabaseViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/mks20&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.editor&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
 </project>
