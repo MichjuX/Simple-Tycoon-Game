@@ -12,7 +12,7 @@ public class Player {
     private int[] _workersCount = {1,1,0,0};
 
     public Player() {
-        this.balance = 1110; // Starting balance
+        this.balance = 10000; // Starting balance
         _workers = new ArrayList<>();
         _workers.add(new Worker(2, 50, "Kucharz", 0));
         _workers.add(new Worker(2, 50, "Kelner", 0));
@@ -60,6 +60,7 @@ public class Player {
             currentProfit += calculatePrice(_workers.get(index).getIncome());
             balance -= calculatePrice(_workers.get(index).getUpgradeCost());
             _workers.get(index).upgrade();
+            System.out.println("ulepszono pracownika");
         }
         else{
             System.out.println("Not enough money");
@@ -111,7 +112,7 @@ public class Player {
         Random rn = new Random();
         if(_workersCount[id]==0){
             int temp = Math.abs(rn.nextInt()%waitTime);
-            System.out.println("temp: " + temp);
+//            System.out.println("temp: " + temp);
             return temp;
         }
         return Math.abs(rn.nextInt()%waitTime/_workersCount[id]);

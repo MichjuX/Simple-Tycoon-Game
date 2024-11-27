@@ -46,4 +46,10 @@ public class Worker {
     public int getId(){
         return id;
     }
+
+    @Override
+    public String toString() {
+        return String.format("(Lvl: %d, Profit: %.2f, Upgrade: %.2f)",
+                level, getIncome(), getUpgradeCost());
+    }
 }

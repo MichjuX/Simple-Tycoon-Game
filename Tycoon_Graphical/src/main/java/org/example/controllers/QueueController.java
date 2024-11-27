@@ -18,9 +18,9 @@ public class QueueController {
     public void addDish(int[] cooks){
         for(int i=0; i<cooks[0]; i++){
             dishesQueue.add(new Dish(player.getCurrentProfit()));
-            System.out.println("Dodano: danie o wartości: " + player.getCurrentProfit());
+//            System.out.println("Dodano: danie o wartości: " + player.getCurrentProfit());
         }
-        System.out.println("Queue size: " + dishesQueue.size());
+//        System.out.println("Queue size: " + dishesQueue.size());
 
     }
 
@@ -29,7 +29,7 @@ public class QueueController {
         for(int i=0; i<player.getPreciseWorkersCount()[1]; i++){
             if(!dishesQueue.isEmpty() && clientCount>0){
                 Dish element = dishesQueue.poll(); // poll() zwraca i usuwa element z początku kolejki
-                System.out.println("Usunięto: " + element);
+//                System.out.println("Usunięto: " + element);
                 clientCount--;
                 player.increaseBalance(element.getWorth());
             }

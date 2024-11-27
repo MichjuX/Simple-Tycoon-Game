@@ -89,9 +89,6 @@ public class GameSecondView {
             e.printStackTrace();
         }
     }
-    public int getWorkersCount(){
-        return _workerNames.length;
-    }
 }
 
 
