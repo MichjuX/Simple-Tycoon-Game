@@ -1,0 +1,48 @@
+paź 24, 2024 6:17:29 PM org.example.controllers.GameController startGameLoop
+INFO: Current balance: $110.0
+paź 24, 2024 6:19:14 PM org.example.controllers.GameController startGameLoop
+INFO: Current balance: $110.0
+paź 24, 2024 6:19:39 PM org.example.controllers.GameController startGameLoop
+INFO: Current balance: $110.0
+paź 24, 2024 6:20:39 PM org.example.controllers.GameController startGameLoop
+INFO: Total income: $10.0
+paź 24, 2024 6:20:39 PM org.example.controllers.GameController startGameLoop
+INFO: Old balance: $100.0
+paź 24, 2024 6:20:39 PM org.example.controllers.GameController startGameLoop
+INFO: New balance: $110.0
+paź 24, 2024 6:22:53 PM org.example.controllers.GameController startGameLoop
+INFO: Total income: $10.0
+paź 24, 2024 6:22:53 PM org.example.controllers.GameController startGameLoop
+INFO: Old balance: $110.0
+paź 24, 2024 6:22:53 PM org.example.controllers.GameController startGameLoop
+INFO: New balance: $120.0
+paź 24, 2024 6:24:16 PM org.example.controllers.GameController startGameLoop
+INFO: Total income: $10.0
+paź 24, 2024 6:24:16 PM org.example.controllers.GameController startGameLoop
+INFO: Old balance: $100.0
+paź 24, 2024 6:24:16 PM org.example.controllers.GameController startGameLoop
+INFO: New balance: $110.0
+paź 24, 2024 6:24:24 PM org.example.controllers.GameController startGameLoop
+INFO: Total income: $20.0
+paź 24, 2024 6:24:24 PM org.example.controllers.GameController startGameLoop
+INFO: Old balance: $60.0
+paź 24, 2024 6:24:24 PM org.example.controllers.GameController startGameLoop
+INFO: New balance: $80.0
+paź 24, 2024 6:24:36 PM org.example.controllers.GameController startGameLoop
+INFO: Total income: $20.0
+paź 24, 2024 6:24:36 PM org.example.controllers.GameController startGameLoop
+INFO: Old balance: $80.0
+paź 24, 2024 6:24:36 PM org.example.controllers.GameController startGameLoop
+INFO: New balance: $100.0
+paź 24, 2024 6:24:43 PM org.example.controllers.GameController startGameLoop
+INFO: Total income: $30.0
+paź 24, 2024 6:24:43 PM org.example.controllers.GameController startGameLoop
+INFO: Old balance: $0.0
+paź 24, 2024 6:24:43 PM org.example.controllers.GameController startGameLoop
+INFO: New balance: $30.0
+paź 24, 2024 6:24:45 PM org.example.controllers.GameController startGameLoop
+INFO: Total income: $30.0
+paź 24, 2024 6:24:45 PM org.example.controllers.GameController startGameLoop
+INFO: Old balance: $30.0
+paź 24, 2024 6:24:45 PM org.example.controllers.GameController startGameLoop
+INFO: New balance: $60.0

@@ -1,0 +1,10 @@
+>> - więcej widoków zrobić
+>> - dodać klientów w czasie losowym i w zależności od nich dochód (tak żeby nie stali w kolcejce)
+>> - zrobić danie (wystarczy jedono)
+>> - widok gdzie moge kupić np pracownika
+>> - zapis danych do pliku
+
+
+>> 1. kucharz robi dish
+>> 2. dodaje go do kolejki
+>> 3. kelner bierze dish z kolejki i wtedy dodaje kase do konta
