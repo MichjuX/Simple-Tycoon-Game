@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class GameView extends JFrame {
+public class GameView extends JPanel {
     JButton _button = new JButton("Start");
     JLabel _balance = new JLabel();
     JLabel _profit = new JLabel();
@@ -28,22 +28,26 @@ public class GameView extends JFrame {
     private JList<Worker> marketingowcyList = new JList<>(marketingowcyModel);
     private List<Worker> workers; // Lista pracowników
 
-
-
-
+    // Konstruktor bezargumentowy (domyślny)
     public GameView() {
+        setupView(null);
+    }
+
+    // Konstruktor z parametrem Runnable (powrót do menu głównego)
+    public GameView(Runnable returnToMenuCallback) {
+        setupView(returnToMenuCallback);
+    }
+
+
+    private void setupView(Runnable returnToMenuCallback) {
         ImageIcon backgroundIcon = new ImageIcon("src/main/resources/images/background.png"); // Ścieżka do obrazka
         Image backgroundImage = backgroundIcon.getImage();
 
         BackgroundPanel backgroundPanel = new BackgroundPanel(backgroundImage);
         backgroundPanel.setLayout(null); // Wyłącz domyślny layout, aby ustawiać komponenty ręcznie
-        this.setContentPane(backgroundPanel);
-
-        this.setTitle("Restaurant Tycoon");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setResizable(true);
+        this.setLayout(new BorderLayout()); // Ustawienie odpowiedniego layoutu
+        this.add(backgroundPanel, BorderLayout.CENTER);
         this.setSize(1920, 1080);
-        this.setLayout(null);
 
         // Dodaj MouseListener do każdej listy
         kucharzeList.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -88,19 +92,47 @@ public class GameView extends JFrame {
                 }
             }
         });
-        _workerList.setToolTipText("Double-click a worker to upgrade.");
-
-        // Przyciski
-//        _button.setBounds(50, 50, 100, 50);
-//        _button.addActionListener(e -> System.out.println("Button clicked"));
-//        _button.setFocusable(false);
-//        _button.setBackground(Color.LIGHT_GRAY);
-//        _button.setBorder(BorderFactory.createEtchedBorder());
-
-//        _upgradeButton.setBounds(800, 150, 100, 50);
-//        _upgradeButton.setFocusable(false);
-//        _upgradeButton.addActionListener(e -> handleUpgradeAction());
-//        this.add(_upgradeButton);
+        szefowieKuchniList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    int selectedIndex = szefowieKuchniList.getSelectedIndex();
+                    if (selectedIndex != -1) {
+                        Worker selectedWorker = szefowieKuchniModel.getElementAt(selectedIndex);
+                        int globalIndex = workers.indexOf(selectedWorker);
+                        if (globalIndex != -1 && upgradeCallback != null) {
+                            upgradeCallback.upgradeWorker(globalIndex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(GameView.this,
+                                "Please select a waiter to upgrade.",
+                                "No Selection",
+                                JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+            }
+        });
+        marketingowcyList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    int selectedIndex = marketingowcyList.getSelectedIndex();
+                    if (selectedIndex != -1) {
+                        Worker selectedWorker = marketingowcyModel.getElementAt(selectedIndex);
+                        int globalIndex = workers.indexOf(selectedWorker);
+                        if (globalIndex != -1 && upgradeCallback != null) {
+                            upgradeCallback.upgradeWorker(globalIndex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(GameView.this,
+                                "Please select a waiter to upgrade.",
+                                "No Selection",
+                                JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+            }
+        });
+//        _workerList.setToolTipText("Double-click a worker to upgrade.");
 
         // Dodanie etykiety do wyświetlania balansu
         _balance.setText("Balance: 0.00");
@@ -112,12 +144,6 @@ public class GameView extends JFrame {
         _profit.setBounds(200, 70, 200, 30); // Położenie i rozmiar etykiety
         _profit.setFont(new Font("Arial", Font.BOLD, 16)); // Styl czcionki
         _profit.setForeground(Color.BLACK);
-
-//        // Inicjalizacja i ustawienie JList
-//        _workerList.setModel(_workerListModel);
-//        JScrollPane scrollPane = new JScrollPane(_workerList);
-//        scrollPane.setBounds(50, 150, 500, 200); // Rozmiar i położenie
-//        this.add(scrollPane);
 
         JScrollPane kucharzeScroll = new JScrollPane(kucharzeList);
         kucharzeScroll.setBounds(700, 150, 200, 150);
@@ -173,8 +199,9 @@ public class GameView extends JFrame {
         backgroundPanel.add(_button);
         backgroundPanel.add(_profit);
 
-        this.setResizable(false);
         this.setVisible(true);
+
+        System.out.println("Komponenty dodane: " + this.getComponents().length);
     }
 
 

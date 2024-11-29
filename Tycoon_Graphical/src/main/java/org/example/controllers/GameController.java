@@ -7,6 +7,7 @@ import org.example.model.Player;
 import org.example.savegame.SaveController;
 import org.example.service.NavigationHandler;
 import org.example.view.gui.GameView;
+import org.example.view.gui.MainMenuView;
 import org.example.view.gui.UpgradeCallback;
 
 import javax.swing.*;
@@ -16,14 +17,13 @@ public class GameController implements UpgradeCallback {
     private SaveController saveController;
     private Player player;
     private GameView _view1;
+    private MainMenuView _mainMenuView;
     QueueController queueController;
-    private Screen screen;
     private int currentPage = 0;
     private boolean paused = false;
 
     public GameController(org.example.view.gui.GameView view) {
         this._view1 = view;
-        this.screen = screen;
         this.player = new Player();
         this.queueController = new QueueController(player);
         _view1.setUpgradeCallback(this);
@@ -46,19 +46,17 @@ public class GameController implements UpgradeCallback {
 
 
     public void startGameLoop() {
-
         startBalanceThread();
         startDishThread();
         startClientThread();
         startBalanceUpdateThread();
         updateViewWorkers();
         _view1.updateWorkerLists(player.get_workers());
-        // Główna pętla gry
-        while (true) {
-
-
-
-        }
+//        while (true) {
+//
+//
+//
+//        }
     }
 
     private void upgrade(int index) {
@@ -68,7 +66,7 @@ public class GameController implements UpgradeCallback {
         _view1.updateWorkerList(player.get_workers());
     }
 
-    private int waitTime = 5000;
+    private final int waitTime = 5000;
     private void startBalanceThread() {
         new Thread(() -> {
             while (true) {
@@ -137,5 +135,13 @@ public class GameController implements UpgradeCallback {
 
     public synchronized double getBalance() {
         return player.getBalance();
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public QueueController getQueueController() {
+        return queueController;
     }
 }
