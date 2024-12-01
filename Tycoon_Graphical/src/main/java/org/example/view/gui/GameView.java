@@ -5,9 +5,12 @@ import org.example.model.Player;
 import org.example.model.Worker;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -101,21 +104,46 @@ public class GameView extends JPanel {
 
 
     private void setupView(Runnable returnToMenuCallback, Runnable saveGameCallback) {
-        // Załaduj pixel art
+        ///////////////////////////////////////////////////////////////
+        // Ładowanie assetów i ustawianie okna
         ImageIcon pixelArtIcon = new ImageIcon("src/main/resources/images/pixelart.png"); // Ścieżka do pixel art
         Image pixelArtImage = pixelArtIcon.getImage();
+
+        ImageIcon buttonIcon = new ImageIcon("src/main/resources/images/button.png");
+        Image buttonImage = buttonIcon.getImage();
+        Image scaledButtonImage = buttonImage.getScaledInstance(300, 50, Image.SCALE_SMOOTH);
+        buttonIcon = new ImageIcon(scaledButtonImage);
+
+        ImageIcon buttonHoverIcon = new ImageIcon("src/main/resources/images/button_hover.png");
+        Image buttonHoverImage = buttonHoverIcon.getImage();
+        Image scaledButtonHoverImage = buttonHoverImage.getScaledInstance(300, 50, Image.SCALE_SMOOTH);
+        buttonHoverIcon = new ImageIcon(scaledButtonHoverImage);
+
 
         BackgroundPanel backgroundPanel = new BackgroundPanel(pixelArtImage);
         backgroundPanel.setLayout(null); // Wyłącz domyślny layout, aby ustawiać komponenty ręcznie
         this.setLayout(new BorderLayout()); // Ustawienie odpowiedniego layoutu
         this.add(backgroundPanel, BorderLayout.CENTER); // Dodanie panelu z tłem
         this.setSize(1920, 1080);
+        ///////////////////////////////////////////////////////////////
 
+        // Wczytywanie obrazu PNG
+        ImageIcon imageIcon = new ImageIcon("src/main/resources/images/logo.png");
+
+        // Tworzenie JLabel i ustawianie obrazu jako jego zawartości
+        JLabel imageLabel = new JLabel(imageIcon);
+        imageLabel.setBounds(200, 200, 200, 200);
+
+        // Dodanie JLabel do JFrame
+//        backgroundPanel.add(imageLabel);
+
+        ///////////////////////////////////////////////////////////////
         // Ustawiam fonta
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Font tinyBig = null;
         Font tinyMedium = null;
         Font tinySmall = null;
+        Font tinySmallest = null;
         try {
             File fontFile = new File("src/main/resources/fonts/Tiny5-Regular.ttf");
 
@@ -131,16 +159,24 @@ public class GameView extends JPanel {
             tinySmall = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(20f);
             ge.registerFont(tinySmall);
 
+            tinySmallest = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(15f);
+            ge.registerFont(tinySmallest);
+
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
+        ///////////////////////////////////////////////////////////////
 
+
+        ///////////////////////////////////////////////////////////////
         // Dodaj MouseListener do każdej listy
         addDoubleClickListener(kucharzeList, kucharzeModel, "Please select a cook to upgrade.");
         addDoubleClickListener(kelnerzyList, kelnerzyModel, "Please select a waiter to upgrade.");
         addDoubleClickListener(szefowieKuchniList, szefowieKuchniModel, "Please select a chef to upgrade.");
         addDoubleClickListener(marketingowcyList, marketingowcyModel, "Please select a marketer to upgrade.");
 //        _workerList.setToolTipText("Double-click a worker to upgrade.");
+        ///////////////////////////////////////////////////////////////
+
 
         ///////////////////////////////////////////////////////////////
         // Monitor kelnera
@@ -168,65 +204,88 @@ public class GameView extends JPanel {
         _satisfaction.setBounds(45, 145, 600, 30);
         _satisfaction.setFont(tinyMedium);
         _satisfaction.setForeground(Color.GREEN);
+
+        backgroundPanel.add(_balance);
+        backgroundPanel.add(_button);
+        backgroundPanel.add(_profit);
+        backgroundPanel.add(_dayCustomers);
+        backgroundPanel.add(_satisfaction);
         ///////////////////////////////////////////////////////////////
 
 
         ///////////////////////////////////////////////////////////////
         // Monitor w kuchni
         _dishes.setText("Gotowe dania: 0");
-        _dishes.setBounds(945, 90, 500, 30);
+        _dishes.setBounds(940, 90, 500, 30);
         _dishes.setFont(tinyBig);
         _dishes.setForeground(Color.WHITE);
+
+        backgroundPanel.add(_dishes);
         ///////////////////////////////////////////////////////////////
 
 
+        ///////////////////////////////////////////////////////////////
         //Renderer do zmiany wyglądu list
+        Font finalTinySmall = tinySmall;
         DefaultListCellRenderer sharedRenderer = new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                renderer.setFont(new Font("Arial", Font.BOLD, 14)); // Ustaw czcionkę
-                renderer.setOpaque(false); // Ustaw przezroczystość
+                renderer.setFont(finalTinySmall);
+                renderer.setForeground(Color.WHITE);
+                renderer.setOpaque(false);
                 return renderer;
             }
         };
-        
+        ///////////////////////////////////////////////////////////////
+
+
+        ///////////////////////////////////////////////////////////////
         // Tworzenie list
-        configureList(kucharzeList, new JScrollPane(), new JLabel(), "Kucharze:", 650, 760, backgroundPanel, sharedRenderer);
-        configureList(kelnerzyList, new JScrollPane(), new JLabel(), "Kelnerzy:", 120, 760, backgroundPanel, sharedRenderer);
-        configureList(szefowieKuchniList, new JScrollPane(), new JLabel(), "Szefowie Kuchni:", 1000, 760, backgroundPanel, sharedRenderer);
-        configureList(marketingowcyList, new JScrollPane(), new JLabel(), "Marketingowcy:", 1500, 780, backgroundPanel, sharedRenderer);
+        configureList(kelnerzyList, new JScrollPane(), new JLabel(), "Kelnerzy:"
+                , 80, 775, backgroundPanel, sharedRenderer, tinySmall);
 
+        configureList(kucharzeList, new JScrollPane(), new JLabel(), "Kucharze:"
+                , 650, 775, backgroundPanel, sharedRenderer, tinySmall);
+
+        configureList(szefowieKuchniList, new JScrollPane(), new JLabel(), "Szefowie Kuchni:"
+                , 1000, 775, backgroundPanel, sharedRenderer, tinySmall);
+
+        configureList(marketingowcyList, new JScrollPane(), new JLabel(), "Marketingowcy:"
+                , 1500, 795, backgroundPanel, sharedRenderer, tinySmall);
+        ///////////////////////////////////////////////////////////////
+
+
+        ///////////////////////////////////////////////////////////////
         // Przyciski "Kup" dla każdego typu pracownika
-        JButton buyCookButton = new JButton("Zatrudnij Kucharza");
-        buyCookButton.setBounds(650, 910, 300, 30);
-        buyCookButton.addActionListener(e -> buy(0));
-        backgroundPanel.add(buyCookButton);
+        JButton buyWaiterButton = new JButton("Zatrudnij Kelnera", buttonIcon);
+        JButton buyCookButton = new JButton("Zatrudnij Kucharza", buttonIcon);
+        JButton buyChefButton = new JButton("Zatrudnij Szefa Kuchni", buttonIcon);
+        JButton buyMarketerButton = new JButton("Zatrudnij Marketingowca", buttonIcon);
 
-        JButton buyWaiterButton = new JButton("Zatrudnij Kelnera");
-        buyWaiterButton.setBounds(120, 910, 300, 30);
-        buyWaiterButton.addActionListener(e -> buy(1));
-        backgroundPanel.add(buyWaiterButton);
+        configureButton(buyWaiterButton, tinySmallest, buttonHoverIcon,
+                120, 910, 300, 30,
+                buttonIcon, backgroundPanel, 1);
 
-        JButton buyChefButton = new JButton("Zatrudnij Szefa Kuchni");
-        buyChefButton.setBounds(1000, 910, 300, 30);
-        buyChefButton.addActionListener(e -> buy(2));
-        backgroundPanel.add(buyChefButton);
+        configureButton(buyCookButton, tinySmallest, buttonHoverIcon,
+                650, 910, 300, 30,
+                buttonIcon, backgroundPanel, 0);
 
-        JButton buyMarketerButton = new JButton("Zatrudnij Marketingowca");
-        buyMarketerButton.setBounds(1500, 940, 300, 30);
-        buyMarketerButton.addActionListener(e -> buy(3));
-        backgroundPanel.add(buyMarketerButton);
+        configureButton(buyChefButton, tinySmallest, buttonHoverIcon,
+                1000, 910, 300, 30,
+                buttonIcon, backgroundPanel, 2);
+
+        configureButton(buyMarketerButton, tinySmallest, buttonHoverIcon,
+                1500, 940, 300, 30,
+                buttonIcon, backgroundPanel, 3);
+
+// Ustawienia pozycji tekstu względem ikony
+
+        ///////////////////////////////////////////////////////////////
 
 
-        backgroundPanel.add(_balance);
-        backgroundPanel.add(_button);
-        backgroundPanel.add(_profit);
-        backgroundPanel.add(_dishes);
-        backgroundPanel.add(_dayCustomers);
-        backgroundPanel.add(_satisfaction);
-
-        // Dodanie przycisku powrotu do menu głównego
+        ///////////////////////////////////////////////////////////////
+        // Przyciski Menu i zapisu
         JButton returnButton = new JButton("Menu Główne");
         returnButton.setBounds(1740, 10, 150, 30);
         returnButton.addActionListener(e -> {
@@ -236,7 +295,6 @@ public class GameView extends JPanel {
         });
         backgroundPanel.add(returnButton);
 
-        // Dodanie przycisku zapisu gry
         JButton saveButton = new JButton("Zapisz Grę");
         saveButton.setBounds(1740, 50, 150, 30);
         saveButton.addActionListener(e -> {
@@ -245,12 +303,51 @@ public class GameView extends JPanel {
             }
         });
         backgroundPanel.add(saveButton);
+        ///////////////////////////////////////////////////////////////
 
         this.setVisible(true);
 
         System.out.println("Komponenty dodane: " + this.getComponents().length);
     }
-    // Ustawienie ClickListenera dla list
+
+    private void configureButton(JButton button,
+                                 Font tinySmall,
+                                 ImageIcon buttonHoverIcon,
+                                 int x, int y,
+                                 int width, int height,
+                                 ImageIcon buttonIcon,
+                                 BackgroundPanel backgroundPanel,
+                                 int action) {
+        button.setBounds(x, y, width, height);
+        button.setFont(tinySmall);
+        button.setBorder(null);
+        button.setFocusPainted(false);
+        button.setContentAreaFilled(false);
+        button.setForeground(Color.WHITE);
+        button.setFocusable(true);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        // Dodanie MouseListener do obsługi zdarzeń myszy
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setIcon(buttonHoverIcon); // Zmień ikonę
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setIcon(buttonIcon); // Przywróć ikonę
+            }
+        });
+        button.setHorizontalTextPosition(SwingConstants.CENTER);
+        button.setVerticalTextPosition(SwingConstants.CENTER);
+
+        button.addActionListener(e -> buy(action));
+        backgroundPanel.add(button);
+    }
+
+
+    ///////////////////////////////////////////////////////////////
+    // Ustawienie Click Listener dla list
     private void addDoubleClickListener(JList<Worker> list, DefaultListModel<Worker> model, String noSelectionMessage) {
         list.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -273,6 +370,9 @@ public class GameView extends JPanel {
             }
         });
     }
+    ///////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////
     // Ustawienie wyglądu list
     private void configureList(JList<?> list,
                                JScrollPane scrollPane,
@@ -280,25 +380,91 @@ public class GameView extends JPanel {
                                String labelText,
                                int x, int y,
                                BackgroundPanel backgroundPanel,
-                               DefaultListCellRenderer sharedRenderer
+                               DefaultListCellRenderer sharedRenderer,
+                               Font font
                                ) {
         // Konfiguracja JLabel
         label.setText(labelText);
-        label.setBounds(x, y - 30, 200, 20);
+        label.setBounds(x, y - 30, 400, 20);
+        label.setForeground(Color.WHITE);
+        label.setFont(font);
         backgroundPanel.add(label);
 
         // Konfiguracja JList i JScrollPane
         list.setOpaque(false);
         scrollPane.setViewportView(list);
-        scrollPane.setBounds(x, y, 300, 150);
+        scrollPane.setBounds(x, y, 400, 120);
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setOpaque(false);
         scrollPane.setBorder(null);
         list.setCellRenderer(sharedRenderer);
+        configureVerticalScrollBar(scrollPane);
+        configureHorizontalScrollBar(scrollPane);
+        backgroundPanel.add(scrollPane);
 
         backgroundPanel.add(scrollPane);
     }
+    ///////////////////////////////////////////////////////////////
 
+    ///////////////////////////////////////////////////////////////
+    // Scrollbary
+    private void configureVerticalScrollBar(JScrollPane scrollPane) {
+        scrollPane.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+                this.thumbColor = Color.WHITE; // Kolor uchwytu
+                this.thumbHighlightColor = Color.WHITE; // Jasny obrys uchwytu
+                this.thumbDarkShadowColor = Color.WHITE; // Ciemny obrys uchwytu
+                this.trackColor = Color.LIGHT_GRAY; // Kolor tła
+                this.trackHighlightColor = Color.WHITE; // Obszar pod uchwytem
+            }
+
+            @Override
+            protected JButton createDecreaseButton(int orientation) {
+                return createInvisibleButton();
+            }
+
+            @Override
+            protected JButton createIncreaseButton(int orientation) {
+                return createInvisibleButton();
+            }
+
+            private JButton createInvisibleButton() {
+                JButton button = new JButton();
+                button.setPreferredSize(new Dimension(0, 0));
+                return button;
+            }
+        });
+    }
+    private void configureHorizontalScrollBar(JScrollPane scrollPane) {
+        scrollPane.getHorizontalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+                this.thumbColor = Color.WHITE; // Kolor uchwytu
+                this.thumbHighlightColor = Color.WHITE; // Jasny obrys uchwytu
+                this.thumbDarkShadowColor = Color.WHITE; // Ciemny obrys uchwytu
+                this.trackColor = Color.LIGHT_GRAY; // Kolor tła
+                this.trackHighlightColor = Color.WHITE; // Obszar pod uchwytem
+            }
+
+            @Override
+            protected JButton createDecreaseButton(int orientation) {
+                return createInvisibleButton();
+            }
+
+            @Override
+            protected JButton createIncreaseButton(int orientation) {
+                return createInvisibleButton();
+            }
+
+            private JButton createInvisibleButton() {
+                JButton button = new JButton();
+                button.setPreferredSize(new Dimension(0, 0));
+                return button;
+            }
+        });
+    }
+    ///////////////////////////////////////////////////////////////
 
 
 
