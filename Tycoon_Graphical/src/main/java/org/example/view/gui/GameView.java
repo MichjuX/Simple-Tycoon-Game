@@ -218,7 +218,7 @@ public class GameView extends JPanel {
         ///////////////////////////////////////////////////////////////
         // Monitor w kuchni
         _dishes.setText("Gotowe dania: 0");
-        _dishes.setBounds(940, 90, 500, 30);
+        _dishes.setBounds(850, 90, 500, 30);
         _dishes.setFont(tinyBig);
         _dishes.setForeground(Color.WHITE);
 
@@ -280,9 +280,6 @@ public class GameView extends JPanel {
         configureButton(buyMarketerButton, tinySmallest, buttonHoverIcon,
                 1500, 940, 300, 30,
                 buttonIcon, backgroundPanel, 3);
-
-// Ustawienia pozycji tekstu względem ikony
-
         ///////////////////////////////////////////////////////////////
 
 
@@ -293,11 +290,28 @@ public class GameView extends JPanel {
                 1740, 10, 150, 30,
                 buttonSmallerIcon, backgroundPanel, 0);
         returnButton.addActionListener(e -> {
-            if (returnToMenuCallback != null) {
-                returnToMenuCallback.run();
+            // Niestandardowe przyciski
+            Object[] options = {"Tak", "Nie"};
+            int choice = JOptionPane.showOptionDialog(
+                    null,
+                    "Czy na pewno chcesz wyjść bez zapisu?",
+                    "Potwierdzenie",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE,
+                    null, // Ikona (null dla domyślnej)
+                    options, // Niestandardowe przyciski
+                    options[1] // Domyślnie zaznaczony przycisk ("Nie")
+            );
+
+            // Sprawdzenie wyboru użytkownika
+            if (choice == JOptionPane.YES_OPTION) {
+                if (returnToMenuCallback != null) {
+                    returnToMenuCallback.run();
+                }
             }
         });
         backgroundPanel.add(returnButton);
+
 
         JButton saveButton = new JButton("Zapisz Grę", buttonSmallerIcon);
         configureButton(saveButton, tinySmallest, buttonHoverSmallerIcon,
@@ -561,44 +575,45 @@ public class GameView extends JPanel {
             upgradeCallback.buyWorker(id); // Wywołaj logikę backendu
         }
     }
-    public void updateDayAndCustomers(int day, int customerCount){
-        System.out.println("dzien: " + day);
+    public void updateDayAndCustomers(int day, int[] hour, int customerCount){
         day=day%7;
         switch(day){
             case 0:
-                _dayCustomersSetText("Poniedziałek", customerCount);
+                _dayCustomersSetText("Poniedziałek", hour, customerCount);
                 break;
             case 1:
-                _dayCustomersSetText("Wtorek", customerCount);
+                _dayCustomersSetText("Wtorek", hour, customerCount);
                 break;
             case 2:
-                _dayCustomersSetText("Środa", customerCount);
+                _dayCustomersSetText("Środa", hour, customerCount);
                 break;
             case 3:
-                _dayCustomersSetText("Czwartek", customerCount);
+                _dayCustomersSetText("Czwartek", hour, customerCount);
                 break;
             case 4:
-                _dayCustomersSetText("Piątek", customerCount);
+                _dayCustomersSetText("Piątek", hour, customerCount);
                 break;
             case 5:
-                _dayCustomersSetText("Sobota", customerCount);
+                _dayCustomersSetText("Sobota", hour, customerCount);
                 break;
             case 6:
-                _dayCustomersSetText("Niedziela", customerCount);
+                _dayCustomersSetText("Niedziela", hour, customerCount);
                 break;
         }
     }
-    private void _dayCustomersSetText(String day, int customers) {
+    private void _dayCustomersSetText(String day, int[] hour, int customers) {
         _dayCustomers.setText(
                 String.format(
                         "<html>" +
-                                "<span style='color: #34e5eb; font-size: 20px;'>%s - </span>" +
+                                "<span style='color: #34e5eb; font-size: 20px;'>%s </span>" +
+                                "<span style='color: #34e5eb; font-size: 20px;'>%02d:%02d - </span>" +
                                 "<span style='color: #34e5eb; font-size: 20px;'>Klienci w kolejce: %s</span>" +
                                 "</html>",
-                        day, customers
+                        day, hour[0], hour[1], customers
                 )
         );
     }
+
 
     public void updateSatisfaction(int satisfaction){
         updateProfit(satisfaction);

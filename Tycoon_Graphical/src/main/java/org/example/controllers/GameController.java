@@ -50,11 +50,6 @@ public class GameController implements UpgradeCallback {
         updateViewWorkers();
         startDaysThread();
         _view.updateWorkerLists(player.get_workers());
-//        while (true) {
-//
-//
-//
-//        }
     }
 
     private void upgrade(int index) {
@@ -77,6 +72,20 @@ public class GameController implements UpgradeCallback {
                         Thread.currentThread().interrupt(); // Przerywamy wątek
                         break;
                     }
+                }
+            }
+        }).start();
+    }
+
+    private void startGameTick(){
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(player.getTimeSpeed());
+
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
                 }
             }
         }).start();
@@ -123,7 +132,7 @@ public class GameController implements UpgradeCallback {
                     // Klient przychodzi co X milisekund
                     Thread.sleep(player.calculateSpeed(3, waitTime));
                     queueController.addClient(); // Dodajemy klienta do kolejki
-                    _view.updateDayAndCustomers(player.getCurrentDay(),queueController.getClientCount());
+                    _view.updateDayAndCustomers(player.getCurrentDay(),player.getCurrentHour(),queueController.getClientCount());
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Przerywamy wątek
                     break;
@@ -136,9 +145,9 @@ public class GameController implements UpgradeCallback {
         new Thread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(10000);
-                    player.nextDay();
-                    _view.updateDayAndCustomers(player.getCurrentDay(),queueController.getClientCount());
+                    Thread.sleep(1);
+                    player.nextHour();
+                    _view.updateDayAndCustomers(player.getCurrentDay(),player.getCurrentHour(),queueController.getClientCount());
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Przerywamy wątek
                     break;

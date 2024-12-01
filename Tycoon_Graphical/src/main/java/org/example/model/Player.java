@@ -13,7 +13,8 @@ public class Player {
     private List<Worker> _workers;
     private int[] _workersCount = {1,1,0,0};
     private int _currentDay = 1;
-
+    private int[] _currentHour = {0,0};
+    private int _timeSpeed = 1;
     public Player() {
         this.balance = 10000; // Starting balance
         _workers = new ArrayList<>();
@@ -169,6 +170,42 @@ public class Player {
             gameView.updateSatisfaction(2);
             System.out.println(customer.getDay() + " 2 " + _currentDay);
             return currentProfit/4;
+        }
+    }
+
+    public int[] getCurrentHour(){
+        return _currentHour;
+    }
+    public void nextHour(){
+        if (_currentHour[0] == 23 && _currentHour[1] == 59){
+            _currentHour[0] = 0;
+            _currentHour[1] = 0;
+            nextDay();
+        }
+        else if(_currentHour[1]<60){
+            _currentHour[1]++;
+        }
+        else{
+            _currentHour[1] = 0;
+            _currentHour[0]++;
+        }
+    }
+    public int getTimeSpeed(){
+        return _timeSpeed;
+    }
+    public void setTimeSpeed(int timeSpeed){
+        _timeSpeed = timeSpeed;
+    }
+    public void changeTimeSpeed(String change){
+        if (change.equals("faster")){
+            if(_timeSpeed<4){
+                _timeSpeed++;
+            }
+        }
+        else if(change.equals("slower")){
+            if(_timeSpeed>1){
+                _timeSpeed--;
+            }
         }
     }
 }
