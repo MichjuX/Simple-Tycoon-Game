@@ -111,13 +111,15 @@ public class GameView extends JPanel {
 
         ImageIcon buttonIcon = new ImageIcon("src/main/resources/images/button.png");
         Image buttonImage = buttonIcon.getImage();
-        Image scaledButtonImage = buttonImage.getScaledInstance(300, 50, Image.SCALE_SMOOTH);
-        buttonIcon = new ImageIcon(scaledButtonImage);
+        buttonIcon = new ImageIcon(buttonImage.getScaledInstance(300, 50, Image.SCALE_SMOOTH));
+        ImageIcon buttonSmallerIcon = new ImageIcon(buttonImage.getScaledInstance(150, 25, Image.SCALE_SMOOTH));
 
         ImageIcon buttonHoverIcon = new ImageIcon("src/main/resources/images/button_hover.png");
         Image buttonHoverImage = buttonHoverIcon.getImage();
-        Image scaledButtonHoverImage = buttonHoverImage.getScaledInstance(300, 50, Image.SCALE_SMOOTH);
-        buttonHoverIcon = new ImageIcon(scaledButtonHoverImage);
+        buttonHoverIcon = new ImageIcon(buttonHoverImage.getScaledInstance(300, 50, Image.SCALE_SMOOTH));
+        ImageIcon buttonHoverSmallerIcon = new ImageIcon(buttonHoverImage.getScaledInstance(150, 25, Image.SCALE_SMOOTH));
+
+
 
 
         BackgroundPanel backgroundPanel = new BackgroundPanel(pixelArtImage);
@@ -226,12 +228,12 @@ public class GameView extends JPanel {
 
         ///////////////////////////////////////////////////////////////
         //Renderer do zmiany wyglądu list
-        Font finalTinySmall = tinySmall;
+        Font finalTinySmallest = tinySmallest;
         DefaultListCellRenderer sharedRenderer = new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                renderer.setFont(finalTinySmall);
+                renderer.setFont(finalTinySmallest);
                 renderer.setForeground(Color.WHITE);
                 renderer.setOpaque(false);
                 return renderer;
@@ -243,16 +245,16 @@ public class GameView extends JPanel {
         ///////////////////////////////////////////////////////////////
         // Tworzenie list
         configureList(kelnerzyList, new JScrollPane(), new JLabel(), "Kelnerzy:"
-                , 80, 775, backgroundPanel, sharedRenderer, tinySmall);
+                , 120, 775, backgroundPanel, sharedRenderer, tinySmallest);
 
         configureList(kucharzeList, new JScrollPane(), new JLabel(), "Kucharze:"
-                , 650, 775, backgroundPanel, sharedRenderer, tinySmall);
+                , 655, 775, backgroundPanel, sharedRenderer, tinySmallest);
 
         configureList(szefowieKuchniList, new JScrollPane(), new JLabel(), "Szefowie Kuchni:"
-                , 1000, 775, backgroundPanel, sharedRenderer, tinySmall);
+                , 1005, 775, backgroundPanel, sharedRenderer, tinySmallest);
 
         configureList(marketingowcyList, new JScrollPane(), new JLabel(), "Marketingowcy:"
-                , 1500, 795, backgroundPanel, sharedRenderer, tinySmall);
+                , 1500, 795, backgroundPanel, sharedRenderer, tinySmallest);
         ///////////////////////////////////////////////////////////////
 
 
@@ -286,8 +288,10 @@ public class GameView extends JPanel {
 
         ///////////////////////////////////////////////////////////////
         // Przyciski Menu i zapisu
-        JButton returnButton = new JButton("Menu Główne");
-        returnButton.setBounds(1740, 10, 150, 30);
+        JButton returnButton = new JButton("Menu Główne", buttonSmallerIcon);
+        configureButton(returnButton, tinySmallest, buttonHoverSmallerIcon,
+                1740, 10, 150, 30,
+                buttonSmallerIcon, backgroundPanel, 0);
         returnButton.addActionListener(e -> {
             if (returnToMenuCallback != null) {
                 returnToMenuCallback.run();
@@ -295,8 +299,10 @@ public class GameView extends JPanel {
         });
         backgroundPanel.add(returnButton);
 
-        JButton saveButton = new JButton("Zapisz Grę");
-        saveButton.setBounds(1740, 50, 150, 30);
+        JButton saveButton = new JButton("Zapisz Grę", buttonSmallerIcon);
+        configureButton(saveButton, tinySmallest, buttonHoverSmallerIcon,
+                1740, 50, 150, 30,
+                buttonSmallerIcon, backgroundPanel, 4);
         saveButton.addActionListener(e -> {
             if (saveGameCallback != null) {
                 saveGameCallback.run();
@@ -385,7 +391,7 @@ public class GameView extends JPanel {
                                ) {
         // Konfiguracja JLabel
         label.setText(labelText);
-        label.setBounds(x, y - 30, 400, 20);
+        label.setBounds(x, y - 30, 250, 20);
         label.setForeground(Color.WHITE);
         label.setFont(font);
         backgroundPanel.add(label);
@@ -393,7 +399,7 @@ public class GameView extends JPanel {
         // Konfiguracja JList i JScrollPane
         list.setOpaque(false);
         scrollPane.setViewportView(list);
-        scrollPane.setBounds(x, y, 400, 120);
+        scrollPane.setBounds(x, y, 300, 120);
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setOpaque(false);
         scrollPane.setBorder(null);
