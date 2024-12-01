@@ -1,13 +1,12 @@
 package org.example.service;
 
 import org.example.model.Player;
-import org.example.controllers.QueueController;
 
 public class GameService {
     private Player player;
-    private QueueController queueController;
+    private QueueService queueController;
 
-    public GameService(Player player, QueueController queueController) {
+    public GameService(Player player, QueueService queueController) {
         this.player = player;
         this.queueController = queueController;
     }

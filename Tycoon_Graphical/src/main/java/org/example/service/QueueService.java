@@ -1,4 +1,4 @@
-package org.example.controllers;
+package org.example.service;
 
 import org.example.model.Customer;
 import org.example.model.Dish;
@@ -8,14 +8,14 @@ import org.example.view.gui.GameView;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-public class QueueController {
+public class QueueService {
     private Queue<Dish> dishesQueue = new ArrayDeque<>();
     private Queue<Customer> customerQueue = new ArrayDeque<>();
     private int clientCount = 0;
     private Player player;
     private GameView gameView;
 
-    public QueueController(Player player, GameView gameView) {
+    public QueueService(Player player, GameView gameView) {
         this.player = player;
         this.gameView = gameView;
     }

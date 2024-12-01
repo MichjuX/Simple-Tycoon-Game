@@ -2,6 +2,7 @@ package org.example.controllers;
 
 import org.example.model.Player;
 import org.example.savegame.SaveController;
+import org.example.service.QueueService;
 import org.example.view.gui.GameView;
 import org.example.view.gui.MainMenuView;
 import org.example.view.gui.UpgradeCallback;
@@ -13,14 +14,14 @@ public class GameController implements UpgradeCallback {
     private Player player;
     private GameView _view;
     private MainMenuView _mainMenuView;
-    QueueController queueController;
+    QueueService queueController;
     private int currentPage = 0;
     private boolean paused = false;
 
     public GameController(org.example.view.gui.GameView view) {
         this._view = view;
         this.player = new Player();
-        this.queueController = new QueueController(player, _view);
+        this.queueController = new QueueService(player, _view);
         _view.setUpgradeCallback(this);
     }
     @Override
@@ -122,7 +123,7 @@ public class GameController implements UpgradeCallback {
                     // Klient przychodzi co X milisekund
                     Thread.sleep(player.calculateSpeed(3, waitTime));
                     queueController.addClient(); // Dodajemy klienta do kolejki
-                    _view.updateCustomers(queueController.getClientCount());
+                    _view.updateDayAndCustomers(player.getCurrentDay(),queueController.getClientCount());
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Przerywamy wątek
                     break;
@@ -137,7 +138,7 @@ public class GameController implements UpgradeCallback {
                 try {
                     Thread.sleep(10000);
                     player.nextDay();
-                    _view.updateDay(player.getCurrentDay());
+                    _view.updateDayAndCustomers(player.getCurrentDay(),queueController.getClientCount());
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Przerywamy wątek
                     break;
@@ -155,7 +156,7 @@ public class GameController implements UpgradeCallback {
         return player;
     }
 
-    public QueueController getQueueController() {
+    public QueueService getQueueController() {
         return queueController;
     }
 }

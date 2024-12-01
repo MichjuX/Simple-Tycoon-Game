@@ -1,6 +1,6 @@
 package org.example.savegame;
 
-import org.example.controllers.QueueController;
+import org.example.service.QueueService;
 import org.example.model.Customer;
 import org.example.model.Dish;
 import org.example.model.Player;
@@ -17,8 +17,8 @@ public class SaveController {
     GameView view1;
     GameSecondView view2;
     Player player;
-    QueueController queueController;
-    public SaveController(GameView view1, GameSecondView view2, Player player, QueueController queueController) {
+    QueueService queueController;
+    public SaveController(GameView view1, GameSecondView view2, Player player, QueueService queueController) {
         this.view1 = view1;
         this.view2 = view2;
         this.player = player;

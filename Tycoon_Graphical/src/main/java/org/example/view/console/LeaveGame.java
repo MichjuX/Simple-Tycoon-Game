@@ -3,10 +3,6 @@ package org.example.view.console;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.screen.TerminalScreen;
-import org.example.controllers.QueueController;
-import org.example.model.Player;
-
-import java.util.Queue;
 
 public class LeaveGame {
     TerminalScreen screen;

@@ -1,5 +1,6 @@
 package org.example.view.gui;
 
+import org.example.controllers.GameController;
 import org.example.model.Player;
 import org.example.model.Worker;
 
@@ -16,9 +17,9 @@ public class GameView extends JPanel {
     JLabel _balance = new JLabel();
     JLabel _profit = new JLabel();
     JLabel _dishes = new JLabel();
-    JLabel _customers = new JLabel();
-    JLabel _curretDay = new JLabel();
+    JLabel _dayCustomers = new JLabel();
     JLabel _satisfaction = new JLabel();
+    private GameController gameController;
     private JButton _upgradeButton = new JButton("Upgrade");
     private final String[] _prefixList = {"", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "O", "N", "D"};
     private JList<String> _workerList = new JList<>();
@@ -135,92 +136,24 @@ public class GameView extends JPanel {
         }
 
         // Dodaj MouseListener do każdej listy
-        kucharzeList.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    int selectedIndex = kucharzeList.getSelectedIndex();
-                    if (selectedIndex != -1) {
-                        Worker selectedWorker = kucharzeModel.getElementAt(selectedIndex);
-                        int globalIndex = workers.indexOf(selectedWorker); // Znajdź indeks w globalnej liście
-                        if (globalIndex != -1 && upgradeCallback != null) {
-                            upgradeCallback.upgradeWorker(globalIndex);
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(GameView.this,
-                                "Please select a cook to upgrade.",
-                                "No Selection",
-                                JOptionPane.WARNING_MESSAGE);
-                    }
-                }
-            }
-        });
-
-// Powtórz dla innych list (kelnerzyList, szefowieKuchniList, marketingowcyList)
-        kelnerzyList.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    int selectedIndex = kelnerzyList.getSelectedIndex();
-                    if (selectedIndex != -1) {
-                        Worker selectedWorker = kelnerzyModel.getElementAt(selectedIndex);
-                        int globalIndex = workers.indexOf(selectedWorker);
-                        if (globalIndex != -1 && upgradeCallback != null) {
-                            upgradeCallback.upgradeWorker(globalIndex);
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(GameView.this,
-                                "Please select a waiter to upgrade.",
-                                "No Selection",
-                                JOptionPane.WARNING_MESSAGE);
-                    }
-                }
-            }
-        });
-        szefowieKuchniList.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    int selectedIndex = szefowieKuchniList.getSelectedIndex();
-                    if (selectedIndex != -1) {
-                        Worker selectedWorker = szefowieKuchniModel.getElementAt(selectedIndex);
-                        int globalIndex = workers.indexOf(selectedWorker);
-                        if (globalIndex != -1 && upgradeCallback != null) {
-                            upgradeCallback.upgradeWorker(globalIndex);
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(GameView.this,
-                                "Please select a waiter to upgrade.",
-                                "No Selection",
-                                JOptionPane.WARNING_MESSAGE);
-                    }
-                }
-            }
-        });
-        marketingowcyList.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    int selectedIndex = marketingowcyList.getSelectedIndex();
-                    if (selectedIndex != -1) {
-                        Worker selectedWorker = marketingowcyModel.getElementAt(selectedIndex);
-                        int globalIndex = workers.indexOf(selectedWorker);
-                        if (globalIndex != -1 && upgradeCallback != null) {
-                            upgradeCallback.upgradeWorker(globalIndex);
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(GameView.this,
-                                "Please select a waiter to upgrade.",
-                                "No Selection",
-                                JOptionPane.WARNING_MESSAGE);
-                    }
-                }
-            }
-        });
+        addDoubleClickListener(kucharzeList, kucharzeModel, "Please select a cook to upgrade.");
+        addDoubleClickListener(kelnerzyList, kelnerzyModel, "Please select a waiter to upgrade.");
+        addDoubleClickListener(szefowieKuchniList, szefowieKuchniModel, "Please select a chef to upgrade.");
+        addDoubleClickListener(marketingowcyList, marketingowcyModel, "Please select a marketer to upgrade.");
 //        _workerList.setToolTipText("Double-click a worker to upgrade.");
 
         ///////////////////////////////////////////////////////////////
         // Monitor kelnera
+        _dayCustomers.setText(
+                "<html>" +
+                        "<span style='color: #34e5eb; font-size: 20px;'>Poniedziałek - </span>" +
+                        "<span style='color: #34e5eb; font-size: 20px;'>Klienci w kolejce: 0</span>" +
+                        "</html>"
+        );
+        _dayCustomers.setBounds(45, 25, 500, 60); // Zwiększ wysokość, aby pomieścić oba wiersze
+        _dayCustomers.setFont(tinyMedium);
+        _dayCustomers.setForeground(Color.cyan);
+
         _balance.setText("Balance: 0.00");
         _balance.setBounds(45, 60, 500, 50);
         _balance.setFont(tinyBig);
@@ -231,11 +164,6 @@ public class GameView extends JPanel {
         _profit.setFont(tinyBig);
         _profit.setForeground(Color.WHITE);
 
-        _curretDay.setText("Poniedziałek");
-        _curretDay.setBounds(45, 40, 200, 30);
-        _curretDay.setFont(tinyMedium);
-        _curretDay.setForeground(Color.cyan);
-
         _satisfaction.setText("Klienci są zadowoleni");
         _satisfaction.setBounds(45, 145, 600, 30);
         _satisfaction.setFont(tinyMedium);
@@ -243,47 +171,31 @@ public class GameView extends JPanel {
         ///////////////////////////////////////////////////////////////
 
 
-
-
+        ///////////////////////////////////////////////////////////////
+        // Monitor w kuchni
         _dishes.setText("Gotowe dania: 0");
-        _dishes.setBounds(500, 100, 500, 30);
-        _dishes.setFont(new Font("Arial", Font.BOLD, 16)); // Styl czcionki
-        _dishes.setForeground(Color.BLACK);
-
-        _customers.setText("Klienci w kolejce: 0");
-        _customers.setBounds(500, 150, 200, 30);
-        _customers.setFont(new Font("Arial", Font.BOLD, 16)); // Styl czcionki
-        _customers.setForeground(Color.BLACK);
+        _dishes.setBounds(945, 90, 500, 30);
+        _dishes.setFont(tinyBig);
+        _dishes.setForeground(Color.WHITE);
+        ///////////////////////////////////////////////////////////////
 
 
-
-        JScrollPane kucharzeScroll = new JScrollPane(kucharzeList);
-        kucharzeScroll.setBounds(650, 760, 300, 150);
-        backgroundPanel.add(kucharzeScroll);
-        JLabel kucharzeLabel = new JLabel("Kucharze:");
-        kucharzeLabel.setBounds(650, 730, 200, 20);
-        backgroundPanel.add(kucharzeLabel);
-
-        JScrollPane kelnerzyScroll = new JScrollPane(kelnerzyList);
-        kelnerzyScroll.setBounds(120, 760, 300, 150);
-        backgroundPanel.add(kelnerzyScroll);
-        JLabel kelnerzyLabel = new JLabel("Kelnerzy:");
-        kelnerzyLabel.setBounds(180, 730, 200, 20);
-        backgroundPanel.add(kelnerzyLabel);
-
-        JScrollPane szefowieScroll = new JScrollPane(szefowieKuchniList);
-        szefowieScroll.setBounds(1000, 760, 300, 150);
-        backgroundPanel.add(szefowieScroll);
-        JLabel szefowieLabel = new JLabel("Szefowie Kuchni:");
-        szefowieLabel.setBounds(1000, 730, 200, 20);
-        backgroundPanel.add(szefowieLabel);
-
-        JScrollPane marketingowcyScroll = new JScrollPane(marketingowcyList);
-        marketingowcyScroll.setBounds(1500, 780, 300, 150);
-        backgroundPanel.add(marketingowcyScroll);
-        JLabel marketingowcyLabel = new JLabel("Marketingowcy:");
-        marketingowcyLabel.setBounds(1500, 750, 200, 20);
-        backgroundPanel.add(marketingowcyLabel);
+        //Renderer do zmiany wyglądu list
+        DefaultListCellRenderer sharedRenderer = new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                renderer.setFont(new Font("Arial", Font.BOLD, 14)); // Ustaw czcionkę
+                renderer.setOpaque(false); // Ustaw przezroczystość
+                return renderer;
+            }
+        };
+        
+        // Tworzenie list
+        configureList(kucharzeList, new JScrollPane(), new JLabel(), "Kucharze:", 650, 760, backgroundPanel, sharedRenderer);
+        configureList(kelnerzyList, new JScrollPane(), new JLabel(), "Kelnerzy:", 120, 760, backgroundPanel, sharedRenderer);
+        configureList(szefowieKuchniList, new JScrollPane(), new JLabel(), "Szefowie Kuchni:", 1000, 760, backgroundPanel, sharedRenderer);
+        configureList(marketingowcyList, new JScrollPane(), new JLabel(), "Marketingowcy:", 1500, 780, backgroundPanel, sharedRenderer);
 
         // Przyciski "Kup" dla każdego typu pracownika
         JButton buyCookButton = new JButton("Zatrudnij Kucharza");
@@ -311,8 +223,7 @@ public class GameView extends JPanel {
         backgroundPanel.add(_button);
         backgroundPanel.add(_profit);
         backgroundPanel.add(_dishes);
-        backgroundPanel.add(_customers);
-        backgroundPanel.add(_curretDay);
+        backgroundPanel.add(_dayCustomers);
         backgroundPanel.add(_satisfaction);
 
         // Dodanie przycisku powrotu do menu głównego
@@ -339,6 +250,56 @@ public class GameView extends JPanel {
 
         System.out.println("Komponenty dodane: " + this.getComponents().length);
     }
+    // Ustawienie ClickListenera dla list
+    private void addDoubleClickListener(JList<Worker> list, DefaultListModel<Worker> model, String noSelectionMessage) {
+        list.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (e.getClickCount() == 2) { // Podwójne kliknięcie
+                    int selectedIndex = list.getSelectedIndex();
+                    if (selectedIndex != -1) {
+                        Worker selectedWorker = model.getElementAt(selectedIndex);
+                        int globalIndex = workers.indexOf(selectedWorker); // Znajdź indeks w globalnej liście
+                        if (globalIndex != -1 && upgradeCallback != null) {
+                            upgradeCallback.upgradeWorker(globalIndex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(GameView.this,
+                                noSelectionMessage,
+                                "No Selection",
+                                JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+            }
+        });
+    }
+    // Ustawienie wyglądu list
+    private void configureList(JList<?> list,
+                               JScrollPane scrollPane,
+                               JLabel label,
+                               String labelText,
+                               int x, int y,
+                               BackgroundPanel backgroundPanel,
+                               DefaultListCellRenderer sharedRenderer
+                               ) {
+        // Konfiguracja JLabel
+        label.setText(labelText);
+        label.setBounds(x, y - 30, 200, 20);
+        backgroundPanel.add(label);
+
+        // Konfiguracja JList i JScrollPane
+        list.setOpaque(false);
+        scrollPane.setViewportView(list);
+        scrollPane.setBounds(x, y, 300, 150);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setOpaque(false);
+        scrollPane.setBorder(null);
+        list.setCellRenderer(sharedRenderer);
+
+        backgroundPanel.add(scrollPane);
+    }
+
+
 
 
     public void updateBalance(double balance, Player player) {
@@ -370,11 +331,30 @@ public class GameView extends JPanel {
     public void updateProfit(double profit) {
         _profit.setText(String.format("Profit: %.2f$/s", profit));
     }
+    public void updateProfit(int satisfaction) {
+        double profit = gameController.getPlayer().getCurrentProfit();
+
+        switch(satisfaction){
+            case 0:
+                _profit.setText(String.format("Profit: %.2f$/s", profit));
+                break;
+            case 1:
+                _profit.setText(String.format(
+                        "<html><span style='color: white;'>Profit: %.2f$/s </span><span style='color: yellow;'>(-50%%)</span></html>",
+                        profit/2
+                ));
+                break;
+            case 2:
+                _profit.setText(String.format(
+                        "<html><span style='color: white;'>Profit: %.2f$/s </span><span style='color: red;'>(-75%%)</span></html>",
+                        profit/4
+                ));
+                break;
+        }
+    }
+
     public void updateDishes(int dishCount) {
         _dishes.setText(String.format("Gotowe dania: %d", dishCount));
-    }
-    public void updateCustomers(int customerCount) {
-        _customers.setText(String.format("Klienci w kolejce: %d", customerCount));
     }
     public void updateWorkerLists(List<Worker> workers) {
         this.workers = workers; // Aktualizacja listy pracowników
@@ -409,51 +389,66 @@ public class GameView extends JPanel {
             upgradeCallback.buyWorker(id); // Wywołaj logikę backendu
         }
     }
-
-    public void updateDay(int day){
+    public void updateDayAndCustomers(int day, int customerCount){
         System.out.println("dzien: " + day);
         day=day%7;
         switch(day){
             case 0:
-                _curretDay.setText("Poniedziałek");
+                _dayCustomersSetText("Poniedziałek", customerCount);
                 break;
             case 1:
-                _curretDay.setText("Wtorek");
+                _dayCustomersSetText("Wtorek", customerCount);
                 break;
             case 2:
-                _curretDay.setText("Środa");
+                _dayCustomersSetText("Środa", customerCount);
                 break;
             case 3:
-                _curretDay.setText("Czwartek");
+                _dayCustomersSetText("Czwartek", customerCount);
                 break;
             case 4:
-                _curretDay.setText("Piątek");
+                _dayCustomersSetText("Piątek", customerCount);
                 break;
             case 5:
-                _curretDay.setText("Sobota");
+                _dayCustomersSetText("Sobota", customerCount);
                 break;
             case 6:
-                _curretDay.setText("Niedziela");
+                _dayCustomersSetText("Niedziela", customerCount);
                 break;
         }
     }
+    private void _dayCustomersSetText(String day, int customers) {
+        _dayCustomers.setText(
+                String.format(
+                        "<html>" +
+                                "<span style='color: #34e5eb; font-size: 20px;'>%s - </span>" +
+                                "<span style='color: #34e5eb; font-size: 20px;'>Klienci w kolejce: %s</span>" +
+                                "</html>",
+                        day, customers
+                )
+        );
+    }
+
     public void updateSatisfaction(int satisfaction){
+        updateProfit(satisfaction);
         switch(satisfaction){
             case 0:
                 _satisfaction.setText("Klienci są zadowoleni");
                 _satisfaction.setForeground(Color.GREEN);
                 break;
             case 1:
-                _satisfaction.setText("Klienci się niecierpliwią (-50% zysku)");
+                _satisfaction.setText("Klienci się niecierpliwią");
                 _satisfaction.setForeground(Color.YELLOW);
                 break;
             case 2:
-                _satisfaction.setText("Klienci są niezadowoleni (-75% zysku)");
+                _satisfaction.setText("Klienci są niezadowoleni");
                 _satisfaction.setForeground(Color.RED);
                 break;
         }
     }
 
+    public void setController(GameController gameController){
+        this.gameController = gameController;
+    }
 
 
 }

@@ -2,11 +2,9 @@ package org.example.view.console;
 
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
-import org.example.controllers.QueueController;
+import org.example.service.QueueService;
 import org.example.model.Player;
 import com.googlecode.lanterna.screen.TerminalScreen;
-
-import java.util.Queue;
 
 public class GameView {
     TerminalScreen screen;
@@ -17,7 +15,7 @@ public class GameView {
         this.textGraphics = screen.newTextGraphics();
 
     }
-    public void display(int selectedOption, double balance, Player player, QueueController queueController) {
+    public void display(int selectedOption, double balance, Player player, QueueService queueController) {
         try {
             screen.clear();
 
