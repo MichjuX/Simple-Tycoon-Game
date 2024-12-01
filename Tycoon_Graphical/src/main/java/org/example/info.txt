@@ -3,6 +3,12 @@
 >> - zrobić danie (wystarczy jedono)
 >> - widok gdzie moge kupić np pracownika
 >> - zapis danych do pliku
+- dni tygodia
+- niezadowolenie klientów
+
+(
+dodałem dni tygodnia do player oraz wątek days do controller
+)
 
 
 >> 1. kucharz robi dish

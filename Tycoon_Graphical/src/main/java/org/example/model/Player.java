@@ -1,5 +1,7 @@
 package org.example.model;
 
+import org.example.view.gui.GameView;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -10,13 +12,13 @@ public class Player {
     private int[] prefixNumber = {0,0};
     private List<Worker> _workers;
     private int[] _workersCount = {1,1,0,0};
+    private int _currentDay = 1;
 
     public Player() {
         this.balance = 10000; // Starting balance
         _workers = new ArrayList<>();
         _workers.add(new Worker(2, 50, "Kucharz", 0));
         _workers.add(new Worker(2, 50, "Kelner", 0));
-
     }
 
     public int getBalancePrefix(){
@@ -84,6 +86,7 @@ public class Player {
                 break;
             case 1:
                 buyHelper(50, 2, 50, "Kelner", id);
+                System.out.println("zatrudniam");
                 break;
             case 2:
                 buyHelper(500, 10, 500, "Szef kuchni", id);
@@ -133,11 +136,40 @@ public class Player {
     public void setWorkersCount(int[] workersCount) {
         _workersCount = workersCount;
     }
+
+    public void setPrefixNumber(int[] prefixNumber){
+        this.prefixNumber = prefixNumber;
+    }
     public int[] getPrefixNumber(){
         return prefixNumber;
     }
-    public void setPrefixNumber(int[] prefixNumber){
-        this.prefixNumber = prefixNumber;
+    public int getCurrentDay(){
+        return _currentDay;
+    }
+    public void nextDay(){
+        if(_currentDay==364) {
+            _currentDay = 1;
+        }
+        else {
+            _currentDay++;
+        }
+    }
+    public double calculateWorth(Customer customer, GameView gameView){
+        if(customer.getDay() == _currentDay){
+            gameView.updateSatisfaction(0);
+            System.out.println(customer.getDay() + " 0 " + _currentDay);
+            return currentProfit;
+        }
+        else if(customer.getDay() == _currentDay-1){
+            gameView.updateSatisfaction(1);
+            System.out.println(customer.getDay() + " 1 " + _currentDay);
+            return currentProfit/2;
+        }
+        else{
+            gameView.updateSatisfaction(2);
+            System.out.println(customer.getDay() + " 2 " + _currentDay);
+            return currentProfit/4;
+        }
     }
 }
 

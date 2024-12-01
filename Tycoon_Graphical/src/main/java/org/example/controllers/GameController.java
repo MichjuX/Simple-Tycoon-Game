@@ -1,47 +1,43 @@
 package org.example.controllers;
 
-import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
-import com.googlecode.lanterna.screen.Screen;
 import org.example.model.Player;
 import org.example.savegame.SaveController;
-import org.example.service.NavigationHandler;
 import org.example.view.gui.GameView;
 import org.example.view.gui.MainMenuView;
 import org.example.view.gui.UpgradeCallback;
 
 import javax.swing.*;
-import java.io.IOException;
 
 public class GameController implements UpgradeCallback {
     private SaveController saveController;
     private Player player;
-    private GameView _view1;
+    private GameView _view;
     private MainMenuView _mainMenuView;
     QueueController queueController;
     private int currentPage = 0;
     private boolean paused = false;
 
     public GameController(org.example.view.gui.GameView view) {
-        this._view1 = view;
+        this._view = view;
         this.player = new Player();
-        this.queueController = new QueueController(player);
-        _view1.setUpgradeCallback(this);
+        this.queueController = new QueueController(player, _view);
+        _view.setUpgradeCallback(this);
     }
     @Override
     public void upgradeWorker(int index) {
         player.upgradeWorker(index); // Ulepszenie pracownika
-        _view1.updateBalance(player.getBalance(), player); // Aktualizacja salda
-        _view1.updateProfit(player.getCurrentProfit()); // Aktualizacja profitu
-        _view1.updateWorkerLists(player.get_workers()); // Aktualizacja list pracowników
+        updateView();
     }
 
     @Override
     public void buyWorker(int workerTypeId) {
         player.buy(workerTypeId); // Kupno pracownika
-        _view1.updateBalance(player.getBalance(), player); // Aktualizacja salda
-        _view1.updateProfit(player.getCurrentProfit()); // Aktualizacja profitu
-        _view1.updateWorkerLists(player.get_workers()); // Aktualizacja list pracowników
+        updateView();
+    }
+    private void updateView() {
+        _view.updateBalance(player.getBalance(), player);
+        _view.updateProfit(player.getCurrentProfit());
+        _view.updateWorkerLists(player.get_workers());
     }
 
 
@@ -51,7 +47,8 @@ public class GameController implements UpgradeCallback {
         startClientThread();
         startBalanceUpdateThread();
         updateViewWorkers();
-        _view1.updateWorkerLists(player.get_workers());
+        startDaysThread();
+        _view.updateWorkerLists(player.get_workers());
 //        while (true) {
 //
 //
@@ -63,7 +60,7 @@ public class GameController implements UpgradeCallback {
         player.upgradeWorker(index);
     }
     private void updateViewWorkers() {
-        _view1.updateWorkerList(player.get_workers());
+        _view.updateWorkerList(player.get_workers());
     }
 
     private final int waitTime = 5000;
@@ -91,7 +88,7 @@ public class GameController implements UpgradeCallback {
                     // Odświeżaj co 100ms
                     Thread.sleep(100);
                     SwingUtilities.invokeLater(() -> {
-                        _view1.updateBalance(getBalance(), player);
+                        _view.updateBalance(getBalance(), player);
                     });
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Przerywamy wątek
@@ -108,6 +105,7 @@ public class GameController implements UpgradeCallback {
                     // Kucharz przygotowuje danie co X milisekund
                     Thread.sleep(player.calculateSpeed(2, waitTime));
                     queueController.addDish(player.getPreciseWorkersCount()); // Dodajemy danie do kolejki
+                    _view.updateDishes(queueController.getQueueSize());
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Przerywamy wątek
                     break;
@@ -124,6 +122,7 @@ public class GameController implements UpgradeCallback {
                     // Klient przychodzi co X milisekund
                     Thread.sleep(player.calculateSpeed(3, waitTime));
                     queueController.addClient(); // Dodajemy klienta do kolejki
+                    _view.updateCustomers(queueController.getClientCount());
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Przerywamy wątek
                     break;
@@ -131,6 +130,21 @@ public class GameController implements UpgradeCallback {
             }
         }).start();
     }
+     private void startDaysThread(){
+
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(10000);
+                    player.nextDay();
+                    _view.updateDay(player.getCurrentDay());
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt(); // Przerywamy wątek
+                    break;
+                }
+            }
+        }).start();
+     }
 
 
     public synchronized double getBalance() {

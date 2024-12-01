@@ -1,6 +1,7 @@
 package org.example.savegame;
 
 import org.example.controllers.QueueController;
+import org.example.model.Customer;
 import org.example.model.Dish;
 import org.example.model.Player;
 import org.example.model.Worker;
@@ -52,6 +53,15 @@ public class SaveController {
                 }
                 savegame.write("\n");
             }
+            savegame.write("ClientCount:," + queueController.getClientCount() + "\n");
+            Queue<Customer> customerQueue = queueController.getCustomerQueue();
+            if (!customerQueue.isEmpty()) {
+                savegame.write("CustomerQueue:,");
+                for (Customer customer : customerQueue) {
+                    savegame.write(customer.getDay() + ",");
+                }
+                savegame.write("\n");
+            }
 
 
             savegame.close();
@@ -66,6 +76,10 @@ public class SaveController {
         try {
             BufferedReader reader = new BufferedReader(new FileReader("savegame.txt"));
             List<Worker> workers = new ArrayList<>();
+            Queue<Dish> dishQueue = queueController.getQueue();
+            Queue<Customer> customerQueue = queueController.getCustomerQueue();
+            dishQueue.clear(); // Oczyszczamy istniejące dane kolejki
+            customerQueue.clear(); // Oczyszczamy istniejącą kolejkę klientów
 
             String line;
             while ((line = reader.readLine()) != null) {
@@ -86,11 +100,16 @@ public class SaveController {
                     String[] parts = line.split(",");
                     double balance = Double.parseDouble(parts[1]);
                     double currentProfit = Double.parseDouble(parts[2]);
-                    int[] workersCount = new int[]{Integer.parseInt(parts[3]),
-                                                    Integer.parseInt(parts[4]),
-                                                    Integer.parseInt(parts[5]),
-                                                    Integer.parseInt(parts[6])};
-                    int[] prefixNumber = new int[]{Integer.parseInt(parts[7]),Integer.parseInt(parts[8])};
+                    int[] workersCount = new int[]{
+                            Integer.parseInt(parts[3]),
+                            Integer.parseInt(parts[4]),
+                            Integer.parseInt(parts[5]),
+                            Integer.parseInt(parts[6])
+                    };
+                    int[] prefixNumber = new int[]{
+                            Integer.parseInt(parts[7]),
+                            Integer.parseInt(parts[8])
+                    };
 
                     // Ustawienie stanu gracza
                     player.setBalance(balance);
@@ -98,6 +117,27 @@ public class SaveController {
                     player.setWorkers(workers);
                     player.setWorkersCount(workersCount);
                     player.setPrefixNumber(prefixNumber);
+                } else if (line.startsWith("Queue:")) {
+                    // Parsowanie linii z danymi kolejki Dish
+                    String[] parts = line.split(",");
+                    for (int i = 1; i < parts.length; i++) { // Pomijamy pierwszy element ("Queue:")
+                        double worth = Double.parseDouble(parts[i]);
+                        Dish dish = new Dish(worth); // Zakładamy, że Dish ma konstruktor z jednym parametrem `worth`
+                        dishQueue.add(dish);
+                    }
+                } else if (line.startsWith("ClientCount:")) {
+                    // Parsowanie liczby klientów
+                    String[] parts = line.split(",");
+                    int clientCount = Integer.parseInt(parts[1]);
+                    queueController.setClientCount(clientCount); // Zakładamy istnienie metody setClientCount
+                } else if (line.startsWith("CustomerQueue:")) {
+                    // Parsowanie kolejki Customer
+                    String[] parts = line.split(",");
+                    for (int i = 1; i < parts.length; i++) { // Pomijamy pierwszy element ("CustomerQueue:")
+                        int day = Integer.parseInt(parts[i]);
+                        Customer customer = new Customer(day);
+                        customerQueue.add(customer);
+                    }
                 }
             }
 
@@ -106,6 +146,9 @@ public class SaveController {
             System.out.println("Wczytano stan gry");
         } catch (IOException e) {
             System.out.println("Błąd odczytu stanu gry");
+        } catch (NumberFormatException e) {
+            System.out.println("Błąd parsowania danych: " + e.getMessage());
         }
     }
+
 }

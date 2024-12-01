@@ -1,18 +1,23 @@
 package org.example.controllers;
 
+import org.example.model.Customer;
 import org.example.model.Dish;
 import org.example.model.Player;
+import org.example.view.gui.GameView;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
 
 public class QueueController {
     private Queue<Dish> dishesQueue = new ArrayDeque<>();
+    private Queue<Customer> customerQueue = new ArrayDeque<>();
     private int clientCount = 0;
     private Player player;
+    private GameView gameView;
 
-    public QueueController(Player player){
+    public QueueController(Player player, GameView gameView) {
         this.player = player;
+        this.gameView = gameView;
     }
 
     public void addDish(int[] cooks){
@@ -31,12 +36,23 @@ public class QueueController {
                 Dish element = dishesQueue.poll(); // poll() zwraca i usuwa element z początku kolejki
 //                System.out.println("Usunięto: " + element);
                 clientCount--;
-                player.increaseBalance(element.getWorth());
+
+                Customer customer = customerQueue.peek();
+                if(customer != null){
+                    player.increaseBalance(player.calculateWorth(customer, gameView));
+                    customerQueue.remove();
+                    System.out.println("Klient zjadł danie o wartości: " + player.calculateWorth(customer, gameView));
+                }
             }
         }
     }
     public void addClient(){
         clientCount++;
+        Customer customer = new Customer(player.getCurrentDay());
+        customerQueue.add(customer);
+    }
+    public void setClientCount(int clientCount){
+        this.clientCount = clientCount;
     }
     public int getQueueSize(){
         return dishesQueue.size();
@@ -46,5 +62,8 @@ public class QueueController {
     }
     public Queue<Dish> getQueue(){
         return dishesQueue;
+    }
+    public Queue<Customer> getCustomerQueue(){
+        return customerQueue;
     }
 }

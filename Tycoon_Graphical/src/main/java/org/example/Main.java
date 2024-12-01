@@ -20,13 +20,35 @@ public class Main {
 
             MainMenuView mainMenuView = new MainMenuView(
                     () -> {
+                        // Usuń istniejący widok gry, jeśli istnieje
                         if (frame.getContentPane().getComponentCount() > 1) {
                             frame.getContentPane().remove(1);
                         }
 
-                        GameView gameView = new GameView(() -> cardLayout.show(frame.getContentPane(), "MainMenu"));
+                        GameController[] gameControllerHolder = new GameController[1];
+
+                        // Tworzenie widoku gry
+                        GameView gameView = new GameView(
+                                () -> cardLayout.show(frame.getContentPane(), "MainMenu"),
+                                () -> {
+                                    GameController gameController = gameControllerHolder[0];
+                                    if (gameController != null) {
+                                        SaveController saveController = new SaveController(
+                                                null, null, gameController.getPlayer(), gameController.getQueueController()
+                                        );
+                                        saveController.saveGame();
+                                    }
+                                }
+                        );
+
+                        // Tworzenie kontrolera gry
                         GameController gameController = new GameController(gameView);
+                        gameControllerHolder[0] = gameController;
+
+                        // Rozpoczęcie pętli gry
                         gameController.startGameLoop();
+
+                        // Dodanie widoku gry do okna
                         frame.add(gameView, "GameView");
                         cardLayout.show(frame.getContentPane(), "GameView");
 
@@ -34,17 +56,41 @@ public class Main {
                         frame.repaint();
                     },
                     () -> {
+                        // Funkcja wczytywania gry
                         if (frame.getContentPane().getComponentCount() > 1) {
                             frame.getContentPane().remove(1);
                         }
 
-                        GameView gameView = new GameView(() -> cardLayout.show(frame.getContentPane(), "MainMenu"));
-                        GameController gameController = new GameController(gameView);
+                        GameController[] gameControllerHolder = new GameController[1];
 
-                        SaveController saveController = new SaveController(null, null, gameController.getPlayer(), gameController.getQueueController());
+                        // Tworzenie widoku gry
+                        GameView gameView = new GameView(
+                                () -> cardLayout.show(frame.getContentPane(), "MainMenu"),
+                                () -> {
+                                    GameController gameController = gameControllerHolder[0];
+                                    if (gameController != null) {
+                                        SaveController saveController = new SaveController(
+                                                null, null, gameController.getPlayer(), gameController.getQueueController()
+                                        );
+                                        saveController.saveGame();
+                                    }
+                                }
+                        );
+
+                        // Tworzenie kontrolera gry
+                        GameController gameController = new GameController(gameView);
+                        gameControllerHolder[0] = gameController;
+
+                        // Wczytanie gry
+                        SaveController saveController = new SaveController(
+                                null, null, gameController.getPlayer(), gameController.getQueueController()
+                        );
                         saveController.loadGame();
 
+                        // Rozpoczęcie pętli gry
                         gameController.startGameLoop();
+
+                        // Dodanie widoku gry do okna
                         frame.add(gameView, "GameView");
                         cardLayout.show(frame.getContentPane(), "GameView");
 
@@ -53,7 +99,6 @@ public class Main {
                     }
             );
 
-
             frame.getContentPane().add(mainMenuView, "MainMenu");
             cardLayout.show(frame.getContentPane(), "MainMenu");
 
@@ -61,4 +106,5 @@ public class Main {
         });
     }
 }
+
 
