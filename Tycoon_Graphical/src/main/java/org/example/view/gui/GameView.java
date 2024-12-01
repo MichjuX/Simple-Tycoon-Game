@@ -113,12 +113,22 @@ public class GameView extends JPanel {
         // Ustawiam fonta
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Font tinyBig = null;
+        Font tinyMedium = null;
+        Font tinySmall = null;
         try {
             File fontFile = new File("src/main/resources/fonts/Tiny5-Regular.ttf");
 
             // Duża
             tinyBig = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(40f);
             ge.registerFont(tinyBig);
+
+            // Średnia
+            tinyMedium = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(25f);
+            ge.registerFont(tinyMedium);
+
+            // Mała
+            tinySmall = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(20f);
+            ge.registerFont(tinySmall);
 
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
@@ -209,16 +219,31 @@ public class GameView extends JPanel {
         });
 //        _workerList.setToolTipText("Double-click a worker to upgrade.");
 
-        // Dodanie etykiety do wyświetlania balansu
+        ///////////////////////////////////////////////////////////////
+        // Monitor kelnera
         _balance.setText("Balance: 0.00");
-        _balance.setBounds(90, 70, 500, 50); // Położenie i rozmiar etykiety
+        _balance.setBounds(45, 60, 500, 50);
         _balance.setFont(tinyBig);
         _balance.setForeground(Color.WHITE);
 
         _profit.setText("Profit: 4.00$/s");
-        _profit.setBounds(90, 120, 500, 30); // Położenie i rozmiar etykiety
+        _profit.setBounds(45, 110, 500, 30);
         _profit.setFont(tinyBig);
         _profit.setForeground(Color.WHITE);
+
+        _curretDay.setText("Poniedziałek");
+        _curretDay.setBounds(45, 40, 200, 30);
+        _curretDay.setFont(tinyMedium);
+        _curretDay.setForeground(Color.cyan);
+
+        _satisfaction.setText("Klienci są zadowoleni");
+        _satisfaction.setBounds(45, 145, 600, 30);
+        _satisfaction.setFont(tinyMedium);
+        _satisfaction.setForeground(Color.GREEN);
+        ///////////////////////////////////////////////////////////////
+
+
+
 
         _dishes.setText("Gotowe dania: 0");
         _dishes.setBounds(500, 100, 500, 30);
@@ -230,15 +255,7 @@ public class GameView extends JPanel {
         _customers.setFont(new Font("Arial", Font.BOLD, 16)); // Styl czcionki
         _customers.setForeground(Color.BLACK);
 
-        _curretDay.setText("Poniedziałek");
-        _curretDay.setBounds(500, 200, 200, 30);
-        _customers.setFont(new Font("Arial", Font.BOLD, 16)); // Styl czcionki
-        _customers.setForeground(Color.BLACK);
 
-        _satisfaction.setText("Klienci są zadowoleni");
-        _satisfaction.setBounds(400, 250, 400, 30);
-        _satisfaction.setFont(new Font("Arial", Font.BOLD, 16)); // Styl czcionki
-        _satisfaction.setForeground(Color.BLACK);
 
         JScrollPane kucharzeScroll = new JScrollPane(kucharzeList);
         kucharzeScroll.setBounds(650, 760, 300, 150);
@@ -424,12 +441,15 @@ public class GameView extends JPanel {
         switch(satisfaction){
             case 0:
                 _satisfaction.setText("Klienci są zadowoleni");
+                _satisfaction.setForeground(Color.GREEN);
                 break;
             case 1:
                 _satisfaction.setText("Klienci się niecierpliwią (-50% zysku)");
+                _satisfaction.setForeground(Color.YELLOW);
                 break;
             case 2:
                 _satisfaction.setText("Klienci są niezadowoleni (-75% zysku)");
+                _satisfaction.setForeground(Color.RED);
                 break;
         }
     }
