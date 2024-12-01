@@ -1,11 +1,10 @@
 package org.example.view.gui;
 
-import org.example.controllers.GameController;
+import org.example.service.GameService;
 import org.example.model.Player;
 import org.example.model.Worker;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -22,7 +21,7 @@ public class GameView extends JPanel {
     JLabel _dishes = new JLabel();
     JLabel _dayCustomers = new JLabel();
     JLabel _satisfaction = new JLabel();
-    private GameController gameController;
+    private GameService gameService;
     private JButton _upgradeButton = new JButton("Upgrade");
     private final String[] _prefixList = {"", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "O", "N", "D"};
     private JList<String> _workerList = new JList<>();
@@ -518,7 +517,7 @@ public class GameView extends JPanel {
         _profit.setText(String.format("Profit: %.2f$/s", profit));
     }
     public void updateProfit(int satisfaction) {
-        double profit = gameController.getPlayer().getCurrentProfit();
+        double profit = gameService.getPlayer().getCurrentProfit();
 
         switch(satisfaction){
             case 0:
@@ -633,8 +632,8 @@ public class GameView extends JPanel {
         }
     }
 
-    public void setController(GameController gameController){
-        this.gameController = gameController;
+    public void setController(GameService gameService){
+        this.gameService = gameService;
     }
 
 

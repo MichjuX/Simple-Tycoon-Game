@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.controllers.GameController;
+import org.example.service.GameService;
 import org.example.savegame.SaveController;
 import org.example.view.gui.GameView;
 import org.example.view.gui.MainMenuView;
@@ -36,16 +36,16 @@ public class Main {
             frame.getContentPane().remove(1);
         }
 
-        GameController[] gameControllerHolder = new GameController[1];
+        GameService[] gameServiceHolder = new GameService[1];
 
         // Tworzenie widoku gry
         GameView gameView = new GameView(
                 () -> cardLayout.show(frame.getContentPane(), "MainMenu"),
                 () -> {
-                    GameController gameController = gameControllerHolder[0];
-                    if (gameController != null) {
+                    GameService gameService = gameServiceHolder[0];
+                    if (gameService != null) {
                         SaveController saveController = new SaveController(
-                                null, null, gameController.getPlayer(), gameController.getQueueController()
+                                null, null, gameService.getPlayer(), gameService.getQueueController()
                         );
                         saveController.saveGame();
                     }
@@ -53,21 +53,21 @@ public class Main {
         );
 
         // Tworzenie kontrolera gry
-        GameController gameController = new GameController(gameView);
-        gameControllerHolder[0] = gameController;
+        GameService gameService = new GameService(gameView);
+        gameServiceHolder[0] = gameService;
 
         if (loadGame) {
-            gameView.setController(gameController);
+            gameView.setController(gameService);
             SaveController saveController = new SaveController(
-                    null, null, gameController.getPlayer(), gameController.getQueueController()
+                    null, null, gameService.getPlayer(), gameService.getQueueController()
             );
             saveController.loadGame();
         }
 
-        gameView.setController(gameController);
+        gameView.setController(gameService);
 
         // Rozpoczęcie pętli gry
-        gameController.startGameLoop();
+        gameService.startGameLoop();
 
         // Dodanie widoku gry do okna
         frame.add(gameView, "GameView");

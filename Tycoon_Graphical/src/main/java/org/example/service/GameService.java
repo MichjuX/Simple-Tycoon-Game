@@ -1,4 +1,4 @@
-package org.example.controllers;
+package org.example.service;
 
 import org.example.model.Player;
 import org.example.savegame.SaveController;
@@ -9,7 +9,7 @@ import org.example.view.gui.UpgradeCallback;
 
 import javax.swing.*;
 
-public class GameController implements UpgradeCallback {
+public class GameService implements UpgradeCallback {
     private SaveController saveController;
     private Player player;
     private GameView _view;
@@ -18,7 +18,7 @@ public class GameController implements UpgradeCallback {
     private int currentPage = 0;
     private boolean paused = false;
 
-    public GameController(org.example.view.gui.GameView view) {
+    public GameService(org.example.view.gui.GameView view) {
         this._view = view;
         this.player = new Player();
         this.queueController = new QueueService(player, _view);
