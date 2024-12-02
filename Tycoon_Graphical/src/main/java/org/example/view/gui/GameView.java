@@ -21,6 +21,7 @@ public class GameView extends JPanel {
     JLabel _dishes = new JLabel();
     JLabel _dayCustomers = new JLabel();
     JLabel _satisfaction = new JLabel();
+    JLabel _speedLabel = new JLabel();
     private GameService gameService;
     private JButton _upgradeButton = new JButton("Upgrade");
     private final String[] _prefixList = {"", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "O", "N", "D"};
@@ -118,6 +119,21 @@ public class GameView extends JPanel {
         buttonHoverIcon = new ImageIcon(buttonHoverImage.getScaledInstance(300, 50, Image.SCALE_SMOOTH));
         ImageIcon buttonHoverSmallerIcon = new ImageIcon(buttonHoverImage.getScaledInstance(150, 25, Image.SCALE_SMOOTH));
 
+        // Wczytywanie obrazu GIF
+        ImageIcon waiter = new ImageIcon("src/main/resources/images/waiter.gif");
+
+// Tworzenie JLabel z ustawieniem rozmiaru 250x250
+        JLabel waiterLabel = new JLabel(waiter) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // Rysowanie animowanego GIF-a w większym rozmiarze
+                g.drawImage(waiter.getImage(), 0, 0, 250, 250, this);
+            }
+        };
+        waiterLabel.setPreferredSize(new Dimension(250, 250));
+        waiterLabel.setBounds(167, 434, 250, 250);
+
 
 
 
@@ -126,6 +142,8 @@ public class GameView extends JPanel {
         this.setLayout(new BorderLayout()); // Ustawienie odpowiedniego layoutu
         this.add(backgroundPanel, BorderLayout.CENTER); // Dodanie panelu z tłem
         this.setSize(1920, 1080);
+
+        backgroundPanel.add(waiterLabel);
         ///////////////////////////////////////////////////////////////
 
         // Wczytywanie obrazu PNG
@@ -226,6 +244,16 @@ public class GameView extends JPanel {
 
 
         ///////////////////////////////////////////////////////////////
+        // Wyświetlacz czasu
+        _speedLabel.setText("Czas: 1.00x");
+        _speedLabel.setBounds(1740, 110, 150, 30);
+        _speedLabel.setFont(tinySmall);
+        _speedLabel.setForeground(Color.WHITE);
+        backgroundPanel.add(_speedLabel);
+        ///////////////////////////////////////////////////////////////
+
+
+        ///////////////////////////////////////////////////////////////
         //Renderer do zmiany wyglądu list
         Font finalTinySmallest = tinySmallest;
         DefaultListCellRenderer sharedRenderer = new DefaultListCellRenderer() {
@@ -266,19 +294,23 @@ public class GameView extends JPanel {
 
         configureButton(buyWaiterButton, tinySmallest, buttonHoverIcon,
                 120, 910, 300, 30,
-                buttonIcon, backgroundPanel, 1);
+                buttonIcon, backgroundPanel);
+        buyWaiterButton.addActionListener(e -> buy(1));
 
         configureButton(buyCookButton, tinySmallest, buttonHoverIcon,
                 650, 910, 300, 30,
-                buttonIcon, backgroundPanel, 0);
+                buttonIcon, backgroundPanel);
+        buyCookButton.addActionListener(e -> buy(0));
 
         configureButton(buyChefButton, tinySmallest, buttonHoverIcon,
                 1000, 910, 300, 30,
-                buttonIcon, backgroundPanel, 2);
+                buttonIcon, backgroundPanel);
+        buyChefButton.addActionListener(e -> buy(2));
 
         configureButton(buyMarketerButton, tinySmallest, buttonHoverIcon,
                 1500, 940, 300, 30,
-                buttonIcon, backgroundPanel, 3);
+                buttonIcon, backgroundPanel);
+        buyMarketerButton.addActionListener(e -> buy(3));
         ///////////////////////////////////////////////////////////////
 
 
@@ -287,7 +319,7 @@ public class GameView extends JPanel {
         JButton returnButton = new JButton("Menu Główne", buttonSmallerIcon);
         configureButton(returnButton, tinySmallest, buttonHoverSmallerIcon,
                 1740, 10, 150, 30,
-                buttonSmallerIcon, backgroundPanel, 0);
+                buttonSmallerIcon, backgroundPanel);
         returnButton.addActionListener(e -> {
             // Niestandardowe przyciski
             Object[] options = {"Tak", "Nie"};
@@ -315,7 +347,7 @@ public class GameView extends JPanel {
         JButton saveButton = new JButton("Zapisz Grę", buttonSmallerIcon);
         configureButton(saveButton, tinySmallest, buttonHoverSmallerIcon,
                 1740, 50, 150, 30,
-                buttonSmallerIcon, backgroundPanel, 4);
+                buttonSmallerIcon, backgroundPanel);
         saveButton.addActionListener(e -> {
             if (saveGameCallback != null) {
                 saveGameCallback.run();
@@ -323,6 +355,22 @@ public class GameView extends JPanel {
         });
         backgroundPanel.add(saveButton);
         ///////////////////////////////////////////////////////////////
+
+
+        ///////////////////////////////////////////////////////////////
+        // Przyciski czasu gry
+        JButton speedIncrease = new JButton("Przyspiesz czas", buttonSmallerIcon);
+        JButton speedDecrease = new JButton("Zwolnij czas", buttonSmallerIcon);
+        configureButton(speedIncrease, tinySmallest, buttonHoverSmallerIcon,
+                1570, 10, 150, 30,
+                buttonSmallerIcon, backgroundPanel);
+        speedIncrease.addActionListener(e -> gameService.changeTimeSpeed("faster"));
+
+        configureButton(speedDecrease, tinySmallest, buttonHoverSmallerIcon,
+                1570, 50, 150, 30,
+                buttonSmallerIcon, backgroundPanel);
+
+        speedDecrease.addActionListener(e -> gameService.changeTimeSpeed("slower"));
 
         this.setVisible(true);
 
@@ -335,8 +383,7 @@ public class GameView extends JPanel {
                                  int x, int y,
                                  int width, int height,
                                  ImageIcon buttonIcon,
-                                 BackgroundPanel backgroundPanel,
-                                 int action) {
+                                 BackgroundPanel backgroundPanel) {
         button.setBounds(x, y, width, height);
         button.setFont(tinySmall);
         button.setBorder(null);
@@ -359,8 +406,6 @@ public class GameView extends JPanel {
         });
         button.setHorizontalTextPosition(SwingConstants.CENTER);
         button.setVerticalTextPosition(SwingConstants.CENTER);
-
-        button.addActionListener(e -> buy(action));
         backgroundPanel.add(button);
     }
 
@@ -500,39 +545,31 @@ public class GameView extends JPanel {
             _workerListModel.addElement(worker.toString()); // Dodaje pracowników
         }
     }
-    private void handleUpgradeAction() {
-        int selectedIndex = _workerList.getSelectedIndex();
-        if (selectedIndex != -1) {
-            if (upgradeCallback != null) {
-                upgradeCallback.upgradeWorker(selectedIndex);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Please select a worker to upgrade.", "No Selection", JOptionPane.WARNING_MESSAGE);
-        }
-    }
     public void setUpgradeCallback(UpgradeCallback upgradeCallback) {
         this.upgradeCallback = upgradeCallback;
     }
     public void updateProfit(double profit) {
-        _profit.setText(String.format("Profit: %.2f$/s", profit));
+        int prefix = gameService.getPlayer().getDisplayedProfitPrefix();
+        _profit.setText(String.format("Profit: %.2f%s$/klient", profit, _prefixList[prefix]));
     }
     public void updateProfit(int satisfaction) {
-        double profit = gameService.getPlayer().getCurrentProfit();
+        double profit = gameService.getPlayer().getDisplayedProfit();
+        int prefix = gameService.getPlayer().getDisplayedProfitPrefix();
 
         switch(satisfaction){
             case 0:
-                _profit.setText(String.format("Profit: %.2f$/s", profit));
+                _profit.setText(String.format("Profit: %.2f%s$/klient", profit, _prefixList[prefix]));
                 break;
             case 1:
                 _profit.setText(String.format(
-                        "<html><span style='color: white;'>Profit: %.2f$/s </span><span style='color: yellow;'>(-50%%)</span></html>",
-                        profit/2
+                        "<html><span style='color: white;'>Profit: %.2f%s$/klient</span><span style='color: yellow;'>(-50%%)</span></html>",
+                        profit/2, _prefixList[prefix]
                 ));
                 break;
             case 2:
                 _profit.setText(String.format(
-                        "<html><span style='color: white;'>Profit: %.2f$/s </span><span style='color: red;'>(-75%%)</span></html>",
-                        profit/4
+                        "<html><span style='color: white;'>Profit: %.2f%s$/klient</span><span style='color: red;'>(-75%%)</span></html>",
+                        profit/4, _prefixList[prefix]
                 ));
                 break;
         }
@@ -630,6 +667,11 @@ public class GameView extends JPanel {
                 _satisfaction.setForeground(Color.RED);
                 break;
         }
+    }
+    public void updateSpeedLabel(double speed) {
+        String speedText = String.format("Czas: %.2fx", speed);
+        _speedLabel.setText(speedText);
+        System.out.println("Speed: " + speed);
     }
 
     public void setController(GameService gameService){

@@ -9,12 +9,13 @@ import java.util.Random;
 public class Player {
     private double balance;
     private double currentProfit = 4;
-    private int[] prefixNumber = {0,0};
+    private double displayedProfit = 4;
+    private int[] prefixNumber = {0,0,0};
     private List<Worker> _workers;
     private int[] _workersCount = {1,1,0,0};
     private int _currentDay = 1;
     private int[] _currentHour = {0,0};
-    private int _timeSpeed = 1;
+
     public Player() {
         this.balance = 10000; // Starting balance
         _workers = new ArrayList<>();
@@ -27,6 +28,12 @@ public class Player {
     }
     public int getProfitPrefix(){
         return prefixNumber[1];
+    }
+    public int getDisplayedProfitPrefix(){
+        return prefixNumber[2];
+    }
+    public double getDisplayedProfit(){
+        return displayedProfit;
     }
     public double getBalance(){
         return balance;
@@ -61,6 +68,11 @@ public class Player {
     public void upgradeWorker(int index){
         if(calculatePrice(_workers.get(index).getUpgradeCost()) <= balance){
             currentProfit += calculatePrice(_workers.get(index).getIncome());
+            displayedProfit += calculateDisplayedPrice(_workers.get(index).getIncome());
+            if(displayedProfit*1000>=1000000){
+                displayedProfit /= 1000;
+                prefixNumber[2]++;
+            }
             balance -= calculatePrice(_workers.get(index).getUpgradeCost());
             _workers.get(index).upgrade();
             System.out.println("ulepszono pracownika");
@@ -79,7 +91,14 @@ public class Player {
         }
         System.out.println("price:" + basePrice);
         return basePrice;
+    }public double calculateDisplayedPrice(double basePrice){
+        for (int i = 1; i <= prefixNumber[2]; i++) {
+            basePrice /= 1000;
+        }
+        System.out.println("price:" + basePrice);
+        return basePrice;
     }
+
     public void buy(int id){
         switch (id) {
             case 0:
@@ -103,6 +122,11 @@ public class Player {
             addWorker(new Worker(income, upgrade, name, _workersCount[num]));
             balance -= calculatePrice(price);
             currentProfit+= calculatePrice(income);
+            displayedProfit += calculateDisplayedPrice(income);
+            if (displayedProfit * 1000 >= 1000000) {
+                displayedProfit /= 1000;
+                prefixNumber[2]++;
+            }
         }
         else{
             System.out.println("Not enough money");
@@ -190,24 +214,7 @@ public class Player {
             _currentHour[0]++;
         }
     }
-    public int getTimeSpeed(){
-        return _timeSpeed;
-    }
-    public void setTimeSpeed(int timeSpeed){
-        _timeSpeed = timeSpeed;
-    }
-    public void changeTimeSpeed(String change){
-        if (change.equals("faster")){
-            if(_timeSpeed<4){
-                _timeSpeed++;
-            }
-        }
-        else if(change.equals("slower")){
-            if(_timeSpeed>1){
-                _timeSpeed--;
-            }
-        }
-    }
+
 }
 
 

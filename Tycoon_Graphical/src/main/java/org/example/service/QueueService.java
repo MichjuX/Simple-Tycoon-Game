@@ -41,7 +41,7 @@ public class QueueService {
                 if(customer != null){
                     player.increaseBalance(player.calculateWorth(customer, gameView));
                     customerQueue.remove();
-                    System.out.println("Klient zjadł danie o wartości: " + player.calculateWorth(customer, gameView));
+//                    System.out.println("Klient zjadł danie o wartości: " + player.calculateWorth(customer, gameView));
                 }
             }
         }
