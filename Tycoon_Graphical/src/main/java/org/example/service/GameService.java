@@ -90,13 +90,14 @@ public class GameService implements UpgradeCallback {
 //            }
 //        }).start();
 //    }
-public void startGameLoop() {
-    updateViewWorkers();
-    startGameTick();
-    _view.updateWorkerLists(player.get_workers());
-//    startGameThread();
+    public void startGameLoop() {
+            updateView();
+            updateViewWorkers();
+            startGameTick();
+            _view.updateWorkerLists(player.get_workers());
+    //    startGameThread();
 
-}
+    }
 
 
     private void upgrade(int index) {

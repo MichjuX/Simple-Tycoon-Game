@@ -146,6 +146,18 @@ public class GameView extends JPanel {
         cookLabel.setPreferredSize(new Dimension(400, 250));
         cookLabel.setBounds(680, 434, 400, 250);
 
+        ImageIcon vent = new ImageIcon("src/main/resources/images/vent.gif");
+        JLabel ventLabel = new JLabel(vent) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // Rysowanie animowanego GIF-a w większym rozmiarze
+                g.drawImage(vent.getImage(), 0, 0, 150, 145, this);
+            }
+        };
+        ventLabel.setPreferredSize(new Dimension(150, 150));
+        ventLabel.setBounds(635, 125, 150, 150);
+
 
 
 
@@ -157,6 +169,7 @@ public class GameView extends JPanel {
 
         backgroundPanel.add(waiterLabel);
         backgroundPanel.add(cookLabel);
+        backgroundPanel.add(ventLabel);
         ///////////////////////////////////////////////////////////////
 
         // Wczytywanie obrazu PNG

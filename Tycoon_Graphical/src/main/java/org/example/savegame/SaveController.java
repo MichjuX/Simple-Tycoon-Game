@@ -44,7 +44,9 @@ public class SaveController {
                     + player.getPreciseWorkersCount()[2] + ","
                     + player.getPreciseWorkersCount()[3] + ","
                     + player.getPrefixNumber()[0] + ","
-                    + player.getPrefixNumber()[1] + "\n");
+                    + player.getPrefixNumber()[1] + ","
+                    + player.getPrefixNumber()[2] + ","
+                    + player.getDisplayedProfit() + "\n");
             Queue<Dish> queue = queueController.getQueue();
             if (!queue.isEmpty()) {
                 savegame.write("Queue:,");
@@ -108,8 +110,10 @@ public class SaveController {
                     };
                     int[] prefixNumber = new int[]{
                             Integer.parseInt(parts[7]),
-                            Integer.parseInt(parts[8])
+                            Integer.parseInt(parts[8]),
+                            Integer.parseInt(parts[9])
                     };
+                    player.setDisplayedProfit(Double.parseDouble(parts[10]));
 
                     // Ustawienie stanu gracza
                     player.setBalance(balance);

@@ -32,6 +32,9 @@ public class Player {
     public int getDisplayedProfitPrefix(){
         return prefixNumber[2];
     }
+    public void setDisplayedProfit(double displayedProfit){
+        this.displayedProfit = displayedProfit;
+    }
     public double getDisplayedProfit(){
         return displayedProfit;
     }
