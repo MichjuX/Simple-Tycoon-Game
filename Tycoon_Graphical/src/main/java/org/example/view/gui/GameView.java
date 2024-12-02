@@ -1,8 +1,10 @@
 package org.example.view.gui;
 
+import org.example.controllers.GameController;
 import org.example.service.GameService;
 import org.example.model.Player;
 import org.example.model.Worker;
+import org.example.service.ResourceLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,8 +12,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class GameView extends JPanel {
@@ -23,6 +23,7 @@ public class GameView extends JPanel {
     JLabel _satisfaction = new JLabel();
     JLabel _speedLabel = new JLabel();
     private GameService gameService;
+    private GameController controller;
     private JButton _upgradeButton = new JButton("Upgrade");
     private final String[] _prefixList = {"", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "O", "N", "D"};
     private JList<String> _workerList = new JList<>();
@@ -38,15 +39,14 @@ public class GameView extends JPanel {
     private JList<Worker> kelnerzyList = new JList<>(kelnerzyModel);
     private JList<Worker> szefowieKuchniList = new JList<>(szefowieKuchniModel);
     private JList<Worker> marketingowcyList = new JList<>(marketingowcyModel);
-    private List<Worker> workers; // Lista pracowników
+     // Lista pracowników
 
     private Runnable returnToMenuCallback;
     private Runnable saveGameCallback;
+    private org.example.view.gui.Callback Callback;
 
     // Konstruktor z opcjami powrotu do menu i zapisu gry
-    public GameView(Runnable returnToMenuCallback, Runnable saveGameCallback) {
-        this.returnToMenuCallback = returnToMenuCallback;
-        this.saveGameCallback = saveGameCallback;
+    public GameView() {
 
         setupView(returnToMenuCallback, saveGameCallback);
         setupEscapeKeyListener();
@@ -106,59 +106,25 @@ public class GameView extends JPanel {
     private void setupView(Runnable returnToMenuCallback, Runnable saveGameCallback) {
         ///////////////////////////////////////////////////////////////
         // Ładowanie assetów i ustawianie okna
-        ImageIcon pixelArtIcon = new ImageIcon("src/main/resources/images/pixelart.png"); // Ścieżka do pixel art
+        ImageIcon pixelArtIcon = ResourceLoader.loadImage("src/main/resources/images/pixelart.png");
         Image pixelArtImage = pixelArtIcon.getImage();
 
-        ImageIcon buttonIcon = new ImageIcon("src/main/resources/images/button.png");
-        Image buttonImage = buttonIcon.getImage();
-        buttonIcon = new ImageIcon(buttonImage.getScaledInstance(300, 50, Image.SCALE_SMOOTH));
-        ImageIcon buttonSmallerIcon = new ImageIcon(buttonImage.getScaledInstance(150, 25, Image.SCALE_SMOOTH));
+        ImageIcon[] buttonIcons = ResourceLoader.loadImageIcons("src/main/resources/images/button.png", 300, 50);
+        ImageIcon buttonIcon = buttonIcons[0];
+        ImageIcon buttonSmallerIcon = buttonIcons[1];
 
-        ImageIcon buttonHoverIcon = new ImageIcon("src/main/resources/images/button_hover.png");
-        Image buttonHoverImage = buttonHoverIcon.getImage();
-        buttonHoverIcon = new ImageIcon(buttonHoverImage.getScaledInstance(300, 50, Image.SCALE_SMOOTH));
-        ImageIcon buttonHoverSmallerIcon = new ImageIcon(buttonHoverImage.getScaledInstance(150, 25, Image.SCALE_SMOOTH));
+        ImageIcon buttonHoverIcon = ResourceLoader.loadScaledImage("src/main/resources/images/button_hover.png", 300, 50);
+        ImageIcon buttonHoverSmallerIcon = ResourceLoader.loadScaledImage("src/main/resources/images/button_hover.png", 150, 25);
 
         // Gify
-        ImageIcon waiter = new ImageIcon("src/main/resources/images/waiter.gif");
-
-        JLabel waiterLabel = new JLabel(waiter) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                // Rysowanie animowanego GIF-a w większym rozmiarze
-                g.drawImage(waiter.getImage(), 0, 0, 250, 250, this);
-            }
-        };
-        waiterLabel.setPreferredSize(new Dimension(250, 250));
+        JLabel waiterLabel = ResourceLoader.createAnimatedLabel("src/main/resources/images/waiter.gif", 250, 250);
         waiterLabel.setBounds(167, 434, 250, 250);
 
+        JLabel cookLabel = ResourceLoader.createAnimatedLabel("src/main/resources/images/cook.gif", 400, 251);
+        cookLabel.setBounds(680, 434, 400, 251);
 
-        ImageIcon cook = new ImageIcon("src/main/resources/images/cook.gif");
-        JLabel cookLabel = new JLabel(cook) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                // Rysowanie animowanego GIF-a w większym rozmiarze
-                g.drawImage(cook.getImage(), 0, 0, 400, 251, this);
-            }
-        };
-        cookLabel.setPreferredSize(new Dimension(400, 250));
-        cookLabel.setBounds(680, 434, 400, 250);
-
-        ImageIcon vent = new ImageIcon("src/main/resources/images/vent.gif");
-        JLabel ventLabel = new JLabel(vent) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                // Rysowanie animowanego GIF-a w większym rozmiarze
-                g.drawImage(vent.getImage(), 0, 0, 150, 145, this);
-            }
-        };
-        ventLabel.setPreferredSize(new Dimension(150, 150));
-        ventLabel.setBounds(635, 125, 150, 150);
-
-
+        JLabel ventLabel = ResourceLoader.createAnimatedLabel("src/main/resources/images/vent.gif", 150, 145);
+        ventLabel.setBounds(635, 125, 150, 145);
 
 
         BackgroundPanel backgroundPanel = new BackgroundPanel(pixelArtImage);
@@ -175,50 +141,34 @@ public class GameView extends JPanel {
         // Wczytywanie obrazu PNG
         ImageIcon imageIcon = new ImageIcon("src/main/resources/images/logo.png");
 
-        // Tworzenie JLabel i ustawianie obrazu jako jego zawartości
-        JLabel imageLabel = new JLabel(imageIcon);
-        imageLabel.setBounds(200, 200, 200, 200);
-
-        // Dodanie JLabel do JFrame
-//        backgroundPanel.add(imageLabel);
-
         ///////////////////////////////////////////////////////////////
         // Ustawiam fonta
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        Font tinyBig = null;
-        Font tinyMedium = null;
-        Font tinySmall = null;
-        Font tinySmallest = null;
-        try {
-            File fontFile = new File("src/main/resources/fonts/Tiny5-Regular.ttf");
+        // Duża
+        Font tinyBig = ResourceLoader.loadFont("src/main/resources/fonts/Tiny5-Regular.ttf", 40f);
+        ge.registerFont(tinyBig);
 
-            // Duża
-            tinyBig = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(40f);
-            ge.registerFont(tinyBig);
+        // Średnia
+        Font tinyMedium = ResourceLoader.loadFont("src/main/resources/fonts/Tiny5-Regular.ttf", 25f);
+        ge.registerFont(tinyMedium);
 
-            // Średnia
-            tinyMedium = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(25f);
-            ge.registerFont(tinyMedium);
+        // Mała
+        Font tinySmall = ResourceLoader.loadFont("src/main/resources/fonts/Tiny5-Regular.ttf", 20f);
+        ge.registerFont(tinySmall);
 
-            // Mała
-            tinySmall = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(20f);
-            ge.registerFont(tinySmall);
+        Font tinySmallest = ResourceLoader.loadFont("src/main/resources/fonts/Tiny5-Regular.ttf", 15f);
+        ge.registerFont(tinySmallest);
 
-            tinySmallest = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(15f);
-            ge.registerFont(tinySmallest);
-
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
         ///////////////////////////////////////////////////////////////
 
 
         ///////////////////////////////////////////////////////////////
         // Dodaj MouseListener do każdej listy
-        addDoubleClickListener(kucharzeList, kucharzeModel, "Please select a cook to upgrade.");
-        addDoubleClickListener(kelnerzyList, kelnerzyModel, "Please select a waiter to upgrade.");
-        addDoubleClickListener(szefowieKuchniList, szefowieKuchniModel, "Please select a chef to upgrade.");
-        addDoubleClickListener(marketingowcyList, marketingowcyModel, "Please select a marketer to upgrade.");
+        addDoubleClickListener(kucharzeList, kucharzeModel, "Please select a cook to upgrade.", controller);
+        addDoubleClickListener(kelnerzyList, kelnerzyModel, "Please select a waiter to upgrade.", controller);
+        addDoubleClickListener(szefowieKuchniList, szefowieKuchniModel, "Please select a chef to upgrade.", controller);
+        addDoubleClickListener(marketingowcyList, marketingowcyModel, "Please select a marketer to upgrade.", controller);
+
 //        _workerList.setToolTipText("Double-click a worker to upgrade.");
         ///////////////////////////////////////////////////////////////
 
@@ -321,22 +271,22 @@ public class GameView extends JPanel {
         configureButton(buyWaiterButton, tinySmallest, buttonHoverIcon,
                 120, 910, 300, 30,
                 buttonIcon, backgroundPanel);
-        buyWaiterButton.addActionListener(e -> buy(1));
+        buyWaiterButton.addActionListener(e -> controller.handleBuyAction(1));
 
         configureButton(buyCookButton, tinySmallest, buttonHoverIcon,
                 650, 910, 300, 30,
                 buttonIcon, backgroundPanel);
-        buyCookButton.addActionListener(e -> buy(0));
+        buyCookButton.addActionListener(e -> controller.handleBuyAction(0));
 
         configureButton(buyChefButton, tinySmallest, buttonHoverIcon,
                 1000, 910, 300, 30,
                 buttonIcon, backgroundPanel);
-        buyChefButton.addActionListener(e -> buy(2));
+        buyChefButton.addActionListener(e -> controller.handleBuyAction(2));
 
         configureButton(buyMarketerButton, tinySmallest, buttonHoverIcon,
                 1500, 940, 300, 30,
                 buttonIcon, backgroundPanel);
-        buyMarketerButton.addActionListener(e -> buy(3));
+        buyMarketerButton.addActionListener(e -> controller.handleBuyAction(3));
         ///////////////////////////////////////////////////////////////
 
 
@@ -346,27 +296,7 @@ public class GameView extends JPanel {
         configureButton(returnButton, tinySmallest, buttonHoverSmallerIcon,
                 1740, 10, 150, 30,
                 buttonSmallerIcon, backgroundPanel);
-        returnButton.addActionListener(e -> {
-            // Niestandardowe przyciski
-            Object[] options = {"Tak", "Nie"};
-            int choice = JOptionPane.showOptionDialog(
-                    null,
-                    "Czy na pewno chcesz wyjść bez zapisu?",
-                    "Potwierdzenie",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.WARNING_MESSAGE,
-                    null, // Ikona (null dla domyślnej)
-                    options, // Niestandardowe przyciski
-                    options[1] // Domyślnie zaznaczony przycisk ("Nie")
-            );
-
-            // Sprawdzenie wyboru użytkownika
-            if (choice == JOptionPane.YES_OPTION) {
-                if (returnToMenuCallback != null) {
-                    returnToMenuCallback.run();
-                }
-            }
-        });
+        returnButton.addActionListener(e -> controller.handleReturnToMenu());
         backgroundPanel.add(returnButton);
 
 
@@ -374,11 +304,7 @@ public class GameView extends JPanel {
         configureButton(saveButton, tinySmallest, buttonHoverSmallerIcon,
                 1740, 50, 150, 30,
                 buttonSmallerIcon, backgroundPanel);
-        saveButton.addActionListener(e -> {
-            if (saveGameCallback != null) {
-                saveGameCallback.run();
-            }
-        });
+        saveButton.addActionListener(e -> controller.handleSaveGame());
         backgroundPanel.add(saveButton);
         ///////////////////////////////////////////////////////////////
 
@@ -390,13 +316,13 @@ public class GameView extends JPanel {
         configureButton(speedIncrease, tinySmallest, buttonHoverSmallerIcon,
                 1570, 10, 150, 30,
                 buttonSmallerIcon, backgroundPanel);
-        speedIncrease.addActionListener(e -> gameService.changeTimeSpeed("faster"));
+        speedIncrease.addActionListener(e -> controller.increaseGameSpeed());
 
         configureButton(speedDecrease, tinySmallest, buttonHoverSmallerIcon,
                 1570, 50, 150, 30,
                 buttonSmallerIcon, backgroundPanel);
 
-        speedDecrease.addActionListener(e -> gameService.changeTimeSpeed("slower"));
+        speedDecrease.addActionListener(e -> controller.decreaseGameSpeed());
 
         this.setVisible(true);
 
@@ -438,7 +364,7 @@ public class GameView extends JPanel {
 
     ///////////////////////////////////////////////////////////////
     // Ustawienie Click Listener dla list
-    private void addDoubleClickListener(JList<Worker> list, DefaultListModel<Worker> model, String noSelectionMessage) {
+    public void addDoubleClickListener(JList<Worker> list, DefaultListModel<Worker> model, String noSelectionMessage, GameController controller) {
         list.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -446,10 +372,7 @@ public class GameView extends JPanel {
                     int selectedIndex = list.getSelectedIndex();
                     if (selectedIndex != -1) {
                         Worker selectedWorker = model.getElementAt(selectedIndex);
-                        int globalIndex = workers.indexOf(selectedWorker); // Znajdź indeks w globalnej liście
-                        if (globalIndex != -1 && upgradeCallback != null) {
-                            upgradeCallback.upgradeWorker(globalIndex);
-                        }
+                        controller.handleWorkerUpgrade(selectedWorker);
                     } else {
                         JOptionPane.showMessageDialog(GameView.this,
                                 noSelectionMessage,
@@ -460,6 +383,8 @@ public class GameView extends JPanel {
             }
         });
     }
+
+
     ///////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////
@@ -571,8 +496,8 @@ public class GameView extends JPanel {
             _workerListModel.addElement(worker.toString()); // Dodaje pracowników
         }
     }
-    public void setUpgradeCallback(UpgradeCallback upgradeCallback) {
-        this.upgradeCallback = upgradeCallback;
+    public void setCallback(Callback Callback) {
+        this.Callback = Callback;
     }
     public void updateProfit(double profit) {
         int prefix = gameService.getPlayer().getDisplayedProfitPrefix();
@@ -605,7 +530,7 @@ public class GameView extends JPanel {
         _dishes.setText(String.format("Gotowe dania: %d", dishCount));
     }
     public void updateWorkerLists(List<Worker> workers) {
-        this.workers = workers; // Aktualizacja listy pracowników
+        gameService.setWorkers(workers);
 
         kucharzeModel.clear();
         kelnerzyModel.clear();
@@ -630,11 +555,6 @@ public class GameView extends JPanel {
                 default:
                     System.out.println("Nieznany typ pracownika: " + worker.getName());
             }
-        }
-    }
-    public void buy(int id) {
-        if (upgradeCallback != null) {
-            upgradeCallback.buyWorker(id); // Wywołaj logikę backendu
         }
     }
     public void updateDayAndCustomers(int day, int[] hour, int customerCount){
@@ -700,9 +620,10 @@ public class GameView extends JPanel {
         System.out.println("Speed: " + speed);
     }
 
-    public void setController(GameService gameService){
+    public void setService(GameService gameService){
         this.gameService = gameService;
     }
-
-
+    public void setController(GameController controller){
+        this.controller = controller;
+    }
 }

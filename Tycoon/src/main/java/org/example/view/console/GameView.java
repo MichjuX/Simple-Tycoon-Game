@@ -61,12 +61,6 @@ public class GameView {
                                 + "$/s";
                     }
                 }
-                else {
-//                    displayText = (i == selectedOption) ? "> "
-//                            + player.getWorkerName(i)
-//                            : "  "
-//                            + player.getWorkerName(i);
-                }
                 if (i == selectedOption) {
                     textGraphics.setBackgroundColor(TextColor.ANSI.GREEN);
                     textGraphics.setForegroundColor(TextColor.ANSI.BLACK);
