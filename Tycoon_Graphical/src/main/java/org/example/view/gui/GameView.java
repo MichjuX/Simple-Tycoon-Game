@@ -119,10 +119,9 @@ public class GameView extends JPanel {
         buttonHoverIcon = new ImageIcon(buttonHoverImage.getScaledInstance(300, 50, Image.SCALE_SMOOTH));
         ImageIcon buttonHoverSmallerIcon = new ImageIcon(buttonHoverImage.getScaledInstance(150, 25, Image.SCALE_SMOOTH));
 
-        // Wczytywanie obrazu GIF
+        // Gify
         ImageIcon waiter = new ImageIcon("src/main/resources/images/waiter.gif");
 
-// Tworzenie JLabel z ustawieniem rozmiaru 250x250
         JLabel waiterLabel = new JLabel(waiter) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -135,6 +134,19 @@ public class GameView extends JPanel {
         waiterLabel.setBounds(167, 434, 250, 250);
 
 
+        ImageIcon cook = new ImageIcon("src/main/resources/images/cook.gif");
+        JLabel cookLabel = new JLabel(cook) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // Rysowanie animowanego GIF-a w większym rozmiarze
+                g.drawImage(cook.getImage(), 0, 0, 400, 251, this);
+            }
+        };
+        cookLabel.setPreferredSize(new Dimension(400, 250));
+        cookLabel.setBounds(680, 434, 400, 250);
+
+
 
 
         BackgroundPanel backgroundPanel = new BackgroundPanel(pixelArtImage);
@@ -144,6 +156,7 @@ public class GameView extends JPanel {
         this.setSize(1920, 1080);
 
         backgroundPanel.add(waiterLabel);
+        backgroundPanel.add(cookLabel);
         ///////////////////////////////////////////////////////////////
 
         // Wczytywanie obrazu PNG
