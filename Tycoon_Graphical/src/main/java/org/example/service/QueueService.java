@@ -14,10 +14,12 @@ public class QueueService {
     private int clientCount = 0;
     private Player player;
     private GameView gameView;
+    private org.example.view.console.GameView lanternaView;
 
-    public QueueService(Player player, GameView gameView) {
+    public QueueService(Player player, GameView gameView, org.example.view.console.GameView lanternaView){
         this.player = player;
         this.gameView = gameView;
+        this.lanternaView = lanternaView;
     }
 
     public void addDish(int[] cooks){
@@ -39,7 +41,7 @@ public class QueueService {
 
                 Customer customer = customerQueue.peek();
                 if(customer != null){
-                    player.increaseBalance(player.calculateWorth(customer, gameView));
+                    player.increaseBalance(player.calculateWorth(customer, gameView, lanternaView));
                     customerQueue.remove();
 //                    System.out.println("Klient zjadł danie o wartości: " + player.calculateWorth(customer, gameView));
                 }

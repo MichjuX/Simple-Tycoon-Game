@@ -78,6 +78,12 @@ public class GameSecondView {
                     String.format("Klienci w kolecje: %d",
                             queueController.getClientCount()
                     ));
+            textGraphics.putString(55, 5,
+                    String.format("%s - %d:%d",
+                            dayBuilder(player.getCurrentDay())
+                            ,player.getCurrentHour()[0]
+                            ,player.getCurrentHour()[1]
+                    ));
             textGraphics.setBackgroundColor(TextColor.ANSI.DEFAULT);
 
             screen.refresh();
@@ -86,6 +92,36 @@ public class GameSecondView {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private String dayBuilder(int globalDay){
+        String dayString = "";
+        int day = globalDay % 7;
+        if(day == 0){
+            dayString = "Poniedziałek";
+        }
+        else if(day == 1){
+            dayString = "Wtorek";
+        }
+        else if(day == 2){
+            dayString = "Środa";
+        }
+        else if(day == 3){
+            dayString = "Czwartek";
+        }
+        else if(day == 4){
+            dayString = "Piątek";
+        }
+        else if(day == 5){
+            dayString = "Sobota";
+        }
+        else if(day == 6){
+            dayString = "Niedziela";
+        }
+        return dayString;
+    }
+
+    public int getWorkersCount(){
+        return _workerNames.length;
     }
 }
 

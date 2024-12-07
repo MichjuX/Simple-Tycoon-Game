@@ -2,6 +2,8 @@ package org.example.model;
 
 import org.example.view.gui.GameView;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -182,24 +184,23 @@ public class Player {
             _currentDay++;
         }
     }
-    public double calculateWorth(Customer customer, GameView gameView){
+    public double calculateWorth(Customer customer, GameView swingView, org.example.view.console.GameView lanternaView){
         if(customer.getDay() == _currentDay){
-            gameView.updateSatisfaction(0);
+            swingView.updateSatisfaction(0);
             System.out.println(customer.getDay() + " 0 " + _currentDay);
             return currentProfit;
         }
         else if(customer.getDay() == _currentDay-1){
-            gameView.updateSatisfaction(1);
+            swingView.updateSatisfaction(1);
             System.out.println(customer.getDay() + " 1 " + _currentDay);
             return currentProfit/2;
         }
         else{
-            gameView.updateSatisfaction(2);
+            swingView.updateSatisfaction(2);
             System.out.println(customer.getDay() + " 2 " + _currentDay);
             return currentProfit/4;
         }
     }
-
     public int[] getCurrentHour(){
         return _currentHour;
     }

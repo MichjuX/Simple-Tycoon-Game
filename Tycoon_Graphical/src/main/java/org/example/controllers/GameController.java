@@ -6,7 +6,6 @@ import org.example.view.gui.Callback;
 import org.example.view.gui.GameView;
 
 import javax.swing.*;
-import java.util.List;
 
 
 public class GameController implements Callback {

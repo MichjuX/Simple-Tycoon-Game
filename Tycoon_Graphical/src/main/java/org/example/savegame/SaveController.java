@@ -14,13 +14,9 @@ import java.util.List;
 import java.util.Queue;
 
 public class SaveController {
-    GameView view1;
-    GameSecondView view2;
     Player player;
     QueueService queueController;
-    public SaveController(GameView view1, GameSecondView view2, Player player, QueueService queueController) {
-        this.view1 = view1;
-        this.view2 = view2;
+    public SaveController(Player player, QueueService queueController) {
         this.player = player;
         this.queueController = queueController;
     }

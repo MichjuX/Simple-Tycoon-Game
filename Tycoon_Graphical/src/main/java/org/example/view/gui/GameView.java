@@ -47,8 +47,7 @@ public class GameView extends JPanel {
 
     // Konstruktor z opcjami powrotu do menu i zapisu gry
     public GameView() {
-
-        setupView(returnToMenuCallback, saveGameCallback);
+        setupView();
         setupEscapeKeyListener();
     }
 
@@ -103,7 +102,7 @@ public class GameView extends JPanel {
     }
 
 
-    private void setupView(Runnable returnToMenuCallback, Runnable saveGameCallback) {
+    private void setupView() {
         ///////////////////////////////////////////////////////////////
         // Ładowanie assetów i ustawianie okna
         ImageIcon pixelArtIcon = ResourceLoader.loadImage("src/main/resources/images/pixelart.png");
@@ -164,11 +163,15 @@ public class GameView extends JPanel {
 
         ///////////////////////////////////////////////////////////////
         // Dodaj MouseListener do każdej listy
-        addDoubleClickListener(kucharzeList, kucharzeModel, "Please select a cook to upgrade.", controller);
-        addDoubleClickListener(kelnerzyList, kelnerzyModel, "Please select a waiter to upgrade.", controller);
-        addDoubleClickListener(szefowieKuchniList, szefowieKuchniModel, "Please select a chef to upgrade.", controller);
-        addDoubleClickListener(marketingowcyList, marketingowcyModel, "Please select a marketer to upgrade.", controller);
+        addDoubleClickListener(kucharzeList, kucharzeModel, "Please select a cook to upgrade.");
+        addDoubleClickListener(kelnerzyList, kelnerzyModel, "Please select a waiter to upgrade.");
+        addDoubleClickListener(szefowieKuchniList, szefowieKuchniModel, "Please select a chef to upgrade.");
+        addDoubleClickListener(marketingowcyList, marketingowcyModel, "Please select a marketer to upgrade.");
 
+        kucharzeList.setToolTipText("Kliknij dwukrotnie, aby ulepszyć.");
+        kelnerzyList.setToolTipText("Kliknij dwukrotnie, aby ulepszyć.");
+        szefowieKuchniList.setToolTipText("Kliknij dwukrotnie, aby ulepszyć.");
+        marketingowcyList.setToolTipText("Kliknij dwukrotnie, aby ulepszyć.");
 //        _workerList.setToolTipText("Double-click a worker to upgrade.");
         ///////////////////////////////////////////////////////////////
 
@@ -181,7 +184,7 @@ public class GameView extends JPanel {
                         "<span style='color: #34e5eb; font-size: 20px;'>Klienci w kolejce: 0</span>" +
                         "</html>"
         );
-        _dayCustomers.setBounds(45, 25, 500, 60); // Zwiększ wysokość, aby pomieścić oba wiersze
+        _dayCustomers.setBounds(45, 25, 600, 60); // Zwiększ wysokość, aby pomieścić oba wiersze
         _dayCustomers.setFont(tinyMedium);
         _dayCustomers.setForeground(Color.cyan);
 
@@ -364,7 +367,7 @@ public class GameView extends JPanel {
 
     ///////////////////////////////////////////////////////////////
     // Ustawienie Click Listener dla list
-    public void addDoubleClickListener(JList<Worker> list, DefaultListModel<Worker> model, String noSelectionMessage, GameController controller) {
+    public void addDoubleClickListener(JList<Worker> list, DefaultListModel<Worker> model, String noSelectionMessage) {
         list.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -372,6 +375,7 @@ public class GameView extends JPanel {
                     int selectedIndex = list.getSelectedIndex();
                     if (selectedIndex != -1) {
                         Worker selectedWorker = model.getElementAt(selectedIndex);
+                        System.out.println("wejde");
                         controller.handleWorkerUpgrade(selectedWorker);
                     } else {
                         JOptionPane.showMessageDialog(GameView.this,
