@@ -23,9 +23,9 @@ public class GameView extends JPanel {
     JLabel _satisfaction = new JLabel();
     JLabel _speedLabel = new JLabel();
     JButton buyTipJarButton;
-    JButton buyPainting;
+    JButton buyPaintingButton;
     private JButton openShopButton;
-    private JPanel shopPanel;
+    private BackgroundPanel shopPanel;
     private JButton closeShopButton;
     private GameService gameService;
     private GameController controller;
@@ -111,14 +111,14 @@ public class GameView extends JPanel {
     private void setupView() {
         ///////////////////////////////////////////////////////////////
         // Ładowanie assetów i ustawianie okna
-        ImageIcon pixelArtIcon = ResourceLoader.loadImage("src/main/resources/images/pixelart.png");
+        ImageIcon pixelArtIcon = ResourceLoader.loadImage("src/main/resources/images/backgrounds/pixelart.png");
         Image pixelArtImage = pixelArtIcon.getImage();
 
-        ImageIcon[] buttonIcons = ResourceLoader.loadImageIcons("src/main/resources/images/button.png", 300, 50);
+        ImageIcon[] buttonIcons = ResourceLoader.loadImageIcons("src/main/resources/images/buttons/button.png", 290, 30);
         ImageIcon buttonIcon = buttonIcons[0];
         ImageIcon buttonSmallerIcon = buttonIcons[1];
 
-        ImageIcon buttonHoverIcon = ResourceLoader.loadScaledImage("src/main/resources/images/button_hover.png", 300, 50);
+        ImageIcon buttonHoverIcon = ResourceLoader.loadScaledImage("src/main/resources/images/buttons/button_hover.png", 290, 30);
         ImageIcon buttonHoverSmallerIcon = ResourceLoader.loadScaledImage("src/main/resources/images/button_hover.png", 150, 25);
 
         // Gify
@@ -126,7 +126,7 @@ public class GameView extends JPanel {
         waiterLabel.setBounds(167, 434, 250, 250);
 
         JLabel cookLabel = ResourceLoader.createAnimatedLabel("src/main/resources/images/cook.gif", 400, 251);
-        cookLabel.setBounds(680, 434, 400, 251);
+        cookLabel.setBounds(674, 434, 400, 251);
 
         JLabel ventLabel = ResourceLoader.createAnimatedLabel("src/main/resources/images/vent.gif", 150, 145);
         ventLabel.setBounds(635, 125, 150, 145);
@@ -191,7 +191,7 @@ public class GameView extends JPanel {
                         "<span style='color: #34e5eb; font-size: 20px;'>Klienci w kolejce: 0</span>" +
                         "</html>"
         );
-        _dayCustomers.setBounds(45, 25, 600, 60); // Zwiększ wysokość, aby pomieścić oba wiersze
+        _dayCustomers.setBounds(45, 25, 700, 60); // Zwiększ wysokość, aby pomieścić oba wiersze
         _dayCustomers.setFont(tinyMedium);
         _dayCustomers.setForeground(Color.cyan);
 
@@ -241,12 +241,11 @@ public class GameView extends JPanel {
 
         ///////////////////////////////////////////////////////////////
         //Renderer do zmiany wyglądu list
-        Font finalTinySmallest = tinySmallest;
         DefaultListCellRenderer sharedRenderer = new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                renderer.setFont(finalTinySmallest);
+                renderer.setFont(tinySmallest);
                 renderer.setForeground(Color.WHITE);
                 renderer.setOpaque(false);
                 return renderer;
@@ -258,16 +257,16 @@ public class GameView extends JPanel {
         ///////////////////////////////////////////////////////////////
         // Tworzenie list
         configureList(kelnerzyList, new JScrollPane(), new JLabel(), "Kelnerzy:"
-                , 120, 775, backgroundPanel, sharedRenderer, tinySmallest);
+                , 129, 785, backgroundPanel, sharedRenderer, tinySmallest);
 
         configureList(kucharzeList, new JScrollPane(), new JLabel(), "Kucharze:"
-                , 655, 775, backgroundPanel, sharedRenderer, tinySmallest);
+                , 663, 775, backgroundPanel, sharedRenderer, tinySmallest);
 
         configureList(szefowieKuchniList, new JScrollPane(), new JLabel(), "Szefowie Kuchni:"
-                , 1005, 775, backgroundPanel, sharedRenderer, tinySmallest);
+                , 1001, 775, backgroundPanel, sharedRenderer, tinySmallest);
 
         configureList(marketingowcyList, new JScrollPane(), new JLabel(), "Marketingowcy:"
-                , 1500, 795, backgroundPanel, sharedRenderer, tinySmallest);
+                , 1507, 815, backgroundPanel, sharedRenderer, tinySmallest);
         ///////////////////////////////////////////////////////////////
 
 
@@ -279,22 +278,22 @@ public class GameView extends JPanel {
         JButton buyMarketerButton = new JButton("Zatrudnij Marketingowca", buttonIcon);
 
         configureButton(buyWaiterButton, tinySmallest, buttonHoverIcon,
-                120, 910, 300, 30,
+                124, 915, 300, 30,
                 buttonIcon, backgroundPanel);
         buyWaiterButton.addActionListener(e -> controller.handleBuyAction(1));
 
         configureButton(buyCookButton, tinySmallest, buttonHoverIcon,
-                650, 910, 300, 30,
+                659, 905, 300, 30,
                 buttonIcon, backgroundPanel);
         buyCookButton.addActionListener(e -> controller.handleBuyAction(0));
 
         configureButton(buyChefButton, tinySmallest, buttonHoverIcon,
-                1000, 910, 300, 30,
+                997, 905, 300, 30,
                 buttonIcon, backgroundPanel);
         buyChefButton.addActionListener(e -> controller.handleBuyAction(2));
 
         configureButton(buyMarketerButton, tinySmallest, buttonHoverIcon,
-                1500, 940, 300, 30,
+                1502, 944, 300, 30,
                 buttonIcon, backgroundPanel);
         buyMarketerButton.addActionListener(e -> controller.handleBuyAction(3));
         ///////////////////////////////////////////////////////////////
@@ -302,18 +301,20 @@ public class GameView extends JPanel {
 
         ///////////////////////////////////////////////////////////////
         // Przyciski Menu i zapisu
-        JButton returnButton = new JButton("Menu Główne", buttonSmallerIcon);
-        configureButton(returnButton, tinySmallest, buttonHoverSmallerIcon,
-                1740, 10, 150, 30,
-                buttonSmallerIcon, backgroundPanel);
+        ImageIcon navigationButtonIcon = ResourceLoader.loadScaledImage("src/main/resources/images/buttons/button_navigation.png", 150, 30);
+        ImageIcon navigationButtonHoverIcon = ResourceLoader.loadScaledImage("src/main/resources/images/buttons/button_navigation_hover.png", 150, 30);
+        JButton returnButton = new JButton("Menu Główne", navigationButtonIcon);
+        configureButton(returnButton, tinySmallest, navigationButtonHoverIcon,
+                1744, 10, 150, 30,
+                navigationButtonIcon, backgroundPanel);
         returnButton.addActionListener(e -> controller.handleReturnToMenu());
         backgroundPanel.add(returnButton);
 
 
-        JButton saveButton = new JButton("Zapisz Grę", buttonSmallerIcon);
-        configureButton(saveButton, tinySmallest, buttonHoverSmallerIcon,
-                1740, 50, 150, 30,
-                buttonSmallerIcon, backgroundPanel);
+        JButton saveButton = new JButton("Zapisz Grę", navigationButtonIcon);
+        configureButton(saveButton, tinySmallest, navigationButtonHoverIcon,
+                1744, 57, 150, 30,
+                navigationButtonIcon, backgroundPanel);
         saveButton.addActionListener(e -> controller.handleSaveGame());
         backgroundPanel.add(saveButton);
         ///////////////////////////////////////////////////////////////
@@ -321,20 +322,20 @@ public class GameView extends JPanel {
 
         ///////////////////////////////////////////////////////////////
         // Przyciski czasu gry
-        JButton speedIncrease = new JButton("Przyspiesz czas", buttonSmallerIcon);
-        JButton speedDecrease = new JButton("Zwolnij czas", buttonSmallerIcon);
-        configureButton(speedIncrease, tinySmallest, buttonHoverSmallerIcon,
-                1570, 10, 150, 30,
-                buttonSmallerIcon, backgroundPanel);
+        JButton speedIncrease = new JButton("Przyspiesz czas", navigationButtonIcon);
+        JButton speedDecrease = new JButton("Zwolnij czas", navigationButtonIcon);
+        configureButton(speedIncrease, tinySmallest, navigationButtonHoverIcon,
+                1568, 10, 150, 30,
+                navigationButtonIcon, backgroundPanel);
         speedIncrease.addActionListener(e -> controller.increaseGameSpeed());
 
-        configureButton(speedDecrease, tinySmallest, buttonHoverSmallerIcon,
-                1570, 50, 150, 30,
-                buttonSmallerIcon, backgroundPanel);
+        configureButton(speedDecrease, tinySmallest, navigationButtonHoverIcon,
+                1568, 57, 150, 30,
+                navigationButtonIcon, backgroundPanel);
 
         speedDecrease.addActionListener(e -> controller.decreaseGameSpeed());
 
-        createShopPanel();
+        createShopPanel(tinySmallest);
         createOpenShopButton();
 
         this.setVisible(true);
@@ -494,28 +495,74 @@ public class GameView extends JPanel {
         });
     }
     ///////////////////////////////////////////////////////////////
-
+    JButton buyFlowerButton;
+    JButton buyCactusButton;
+    JButton buyRackButton;
     ///////////////////////////////////////////////////////////////
     // Sklep
-    private void createShopPanel() {
-        shopPanel = new JPanel();
+    private void createShopPanel(Font tinySmallest) {
+        ImageIcon backgroundImage = ResourceLoader.loadScaledImage("src/main/resources/images/backgrounds/buy_menu.png", 250, 270);
+        shopPanel = new BackgroundPanel(backgroundImage.getImage());
+
         shopPanel.setLayout(new BoxLayout(shopPanel, BoxLayout.Y_AXIS));
         shopPanel.setBackground(Color.WHITE);
         shopPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
+        ImageIcon navigationButtonIcon = ResourceLoader.loadScaledImage("src/main/resources/images/buttons/button_buy_menu_buy.png",
+                250, 30);
+        ImageIcon navigationButtonHoverIcon = ResourceLoader.loadScaledImage("src/main/resources/images/buttons/button_buy_menu_buy_hover.png",
+                250, 30);
+
+
         // Dodaj przyciski do kupowania przedmiotów
-        buyTipJarButton = new JButton("Słoik na tipy - 10000$");
-        buyPainting = new JButton("Kup obaz - 50000$");
+        buyTipJarButton = new JButton("Słoik na tipy - 10000$", navigationButtonIcon);
+        buyPaintingButton = new JButton("Kup obaz - 50000$", navigationButtonIcon);
+        buyFlowerButton = new JButton("Kup kwiat - 100000$", navigationButtonIcon);
+        buyCactusButton = new JButton("Kup kaktusa - 150000$", navigationButtonIcon);
+        buyRackButton = new JButton("Kup szafke - 200000$", navigationButtonIcon);
+
+
+        configureButton(buyTipJarButton, tinySmallest, navigationButtonHoverIcon,
+                0, 0, 250, 30, navigationButtonIcon, shopPanel);
+
+        configureButton(buyPaintingButton, tinySmallest, navigationButtonHoverIcon,
+                0, 0, 250, 30, navigationButtonIcon, shopPanel);
+
+        configureButton(buyFlowerButton, tinySmallest, navigationButtonHoverIcon,
+                0, 0, 250, 30, navigationButtonIcon, shopPanel);
+
+        configureButton(buyCactusButton, tinySmallest, navigationButtonHoverIcon,
+                0, 0, 250, 30, navigationButtonIcon, shopPanel);
+
+        configureButton(buyRackButton, tinySmallest, navigationButtonHoverIcon,
+                0, 0, 250, 30, navigationButtonIcon, shopPanel);
+
+
 
         buyTipJarButton.addActionListener(e -> controller.handleBuyDecoration(10000, 0));
-        buyPainting.addActionListener(e -> controller.handleBuyDecoration(50000, 1));
+        buyPaintingButton.addActionListener(e -> controller.handleBuyDecoration(50000, 1));
+        buyFlowerButton.addActionListener(e -> controller.handleBuyDecoration(100000, 2));
+        buyCactusButton.addActionListener(e -> controller.handleBuyDecoration(150000, 3));
+        buyRackButton.addActionListener(e -> controller.handleBuyDecoration(200000, 4));
 
+        shopPanel.add(Box.createRigidArea(new Dimension(45, 20)));
         shopPanel.add(buyTipJarButton);
-        shopPanel.add(buyPainting);
+        shopPanel.add(Box.createRigidArea(new Dimension(45, 10)));
+        shopPanel.add(buyPaintingButton);
+        shopPanel.add(Box.createRigidArea(new Dimension(45, 10)));
+        shopPanel.add(buyFlowerButton);
+        shopPanel.add(Box.createRigidArea(new Dimension(45, 10)));
+        shopPanel.add(buyCactusButton);
+        shopPanel.add(Box.createRigidArea(new Dimension(45, 10)));
+        shopPanel.add(buyRackButton);
+
 
         // Dodaj przycisk zamknięcia sklepu
-        closeShopButton = new JButton("Zamknij Sklep");
+        closeShopButton = new JButton("Zamknij sklep", navigationButtonIcon);
+        configureButton(closeShopButton, tinySmallest, navigationButtonHoverIcon,
+                0, 0, 250, 30, navigationButtonIcon, shopPanel);
         closeShopButton.addActionListener(e -> hideShopPanel());
+        shopPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         shopPanel.add(closeShopButton);
 
         // Ukryj panel sklepu na początku
@@ -523,14 +570,19 @@ public class GameView extends JPanel {
         backgroundPanel.add(shopPanel);
     }
     private void createOpenShopButton() {
-        openShopButton = new JButton("Sklep z dekoracjami");
+        ImageIcon button = ResourceLoader.loadScaledImage("src/main/resources/images/buttons/button_buy_menu.png", 90, 90);
+        openShopButton = new JButton(" ", button);
+        configureButton(openShopButton,
+                new Font("Arial", Font.PLAIN, 20),
+                ResourceLoader.loadScaledImage("src/main/resources/images/buttons/button_buy_menu_hover.png", 90, 90),
+                0, 0, 90, 90, button, backgroundPanel);
+        openShopButton.setBounds(1420, 20, 90, 90); // Dostosuj pozycję według potrzeb
         openShopButton.addActionListener(e -> showShopPanel());
-        openShopButton.setBounds(100, 100, 300, 30); // Dostosuj pozycję według potrzeb
         backgroundPanel.add(openShopButton);
     }
     private void showShopPanel() {
         shopPanel.setVisible(true);
-        shopPanel.setBounds(500, 200, 200, 200); // Dostosuj pozycję i rozmiar według potrzeb
+        shopPanel.setBounds(1300, 100, 300, 270); // Dostosuj pozycję i rozmiar według potrzeb
     }
 
     private void hideShopPanel() {
@@ -541,18 +593,37 @@ public class GameView extends JPanel {
         System.out.println("wyświetlam");
         switch(id){
             case 0:
-                JLabel tipJar = ResourceLoader.createAnimatedLabel("src/main/resources/images/waiter.png", 150, 150);
-                tipJar.setBounds(1000, 434, 150, 150);
+                JLabel tipJar = ResourceLoader.createAnimatedLabel("src/main/resources/images/decorations/tip-jar.png", 50, 70);
+                tipJar.setBounds(129, 615, 50, 70);
                 backgroundPanel.add(tipJar);
                 buyTipJarButton.setVisible(false);
 
                 break;
             case 1:
-                JLabel painting = ResourceLoader.createAnimatedLabel("src/main/resources/images/painting.gif", 150, 150);
-                painting.setBounds(1200, 434, 150, 150);
+                JLabel painting = ResourceLoader.createAnimatedLabel("src/main/resources/images/decorations/painting.png", 210, 140);
+                painting.setBounds(1550, 250, 210, 140);
                 backgroundPanel.add(painting);
-                buyPainting.setVisible(false);
+                buyPaintingButton.setVisible(false);
                 break;
+            case 2:
+                JLabel flower = ResourceLoader.createAnimatedLabel("src/main/resources/images/decorations/flower.png", 72, 154);
+                flower.setBounds(465, 530, 70, 160);
+                backgroundPanel.add(flower);
+                buyFlowerButton.setVisible(false);
+                break;
+            case 3:
+                JLabel cactus  = ResourceLoader.createAnimatedLabel("src/main/resources/images/decorations/cactus.png", 60, 140);
+                cactus.setBounds(1805, 575, 60, 140);
+                backgroundPanel.add(cactus);
+                buyCactusButton.setVisible(false);
+                break;
+            case 4:
+                JLabel rack = ResourceLoader.createAnimatedLabel("src/main/resources/images/decorations/rack.png", 386, 164);
+                rack.setBounds(655, 376, 390, 170);
+                backgroundPanel.add(rack);
+                buyRackButton.setVisible(false);
+            break;
+
         }
         backgroundPanel.revalidate();
         backgroundPanel.repaint();
@@ -560,10 +631,9 @@ public class GameView extends JPanel {
     ///////////////////////////////////////////////////////////////
 
     public void displayObject(int objectIndex) {
-        System.out.println("wyświetlam dekorację");
         switch(objectIndex){
             case 0:
-
+                System.out.println("wyświetlam bossa");
                 JLabel bossLabel = ResourceLoader.createAnimatedLabel("src/main/resources/images/boss.gif", 250, 250);
                 bossLabel.setBounds(1100, 434, 250, 250);
                 backgroundPanel.add(bossLabel);
@@ -574,7 +644,6 @@ public class GameView extends JPanel {
                 marketer.setBounds(1450, 444, 400, 251);
                 backgroundPanel.add(marketer);
                 break;
-
         }
         backgroundPanel.revalidate();
         backgroundPanel.repaint();

@@ -188,17 +188,17 @@ public class Player {
     public double calculateWorth(Customer customer, GameView swingView, org.example.view.console.GameView lanternaView){
         if(customer.getDay() == _currentDay){
             swingView.updateSatisfaction(0);
-            System.out.println(customer.getDay() + " 0 " + _currentDay);
+//            System.out.println(customer.getDay() + " 0 " + _currentDay);
             return currentProfit;
         }
         else if(customer.getDay() == _currentDay-1){
             swingView.updateSatisfaction(1);
-            System.out.println(customer.getDay() + " 1 " + _currentDay);
+//            System.out.println(customer.getDay() + " 1 " + _currentDay);
             return currentProfit/2;
         }
         else{
             swingView.updateSatisfaction(2);
-            System.out.println(customer.getDay() + " 2 " + _currentDay);
+//            System.out.println(customer.getDay() + " 2 " + _currentDay);
             return currentProfit/4;
         }
     }
@@ -220,11 +220,23 @@ public class Player {
         }
     }
 
-    public void buyDecoration(int price, int decorationId){
+    public int buyDecoration(int price, int decorationId){
         if (calculatePrice(price) <= balance) {
             balance -= calculatePrice(price);
             decorations[decorationId]++;
+            return 0;
         }
+        else{
+            System.out.println("Not enough money");
+            return 1;
+        }
+    }
+    public int[] getDecorations(){
+        return decorations;
+    }
+
+    public void setDecorations(int[] decorations) {
+        this.decorations = decorations;
     }
 }
 

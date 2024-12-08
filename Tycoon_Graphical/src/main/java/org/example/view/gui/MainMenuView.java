@@ -19,15 +19,15 @@ public class MainMenuView extends JPanel {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(Color.LIGHT_GRAY);
 
-        ImageIcon pixelArtIcon = ResourceLoader.loadImage("src/main/resources/images/menu_pixelart.png");
+        ImageIcon pixelArtIcon = ResourceLoader.loadImage("src/main/resources/images/backgrounds/menu_pixelart.png");
         Image pixelArtImage = pixelArtIcon.getImage();
         BackgroundPanel backgroundPanel = new BackgroundPanel(pixelArtImage);
 
         // Set layout to null for absolute positioning
         backgroundPanel.setLayout(null);
 
-        ImageIcon button = ResourceLoader.loadScaledImage("src/main/resources/images/menu_button.png", 450, 90);
-        ImageIcon button_hover = ResourceLoader.loadScaledImage("src/main/resources/images/menu_button_clicked.png", 450, 90);
+        ImageIcon button = ResourceLoader.loadScaledImage("src/main/resources/images/buttons/menu_button.png", 450, 90);
+        ImageIcon button_hover = ResourceLoader.loadScaledImage("src/main/resources/images/buttons/menu_button_clicked.png", 450, 90);
 
         // Load and register fonts
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();

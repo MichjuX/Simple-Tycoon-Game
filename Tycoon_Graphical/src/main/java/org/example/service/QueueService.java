@@ -35,7 +35,7 @@ public class QueueService {
         // Pobieranie i usuwanie elementu z początku kolejki (FIFO)
         for(int i=0; i<player.getPreciseWorkersCount()[1]; i++){
             if(!dishesQueue.isEmpty() && clientCount>0){
-                Dish element = dishesQueue.poll(); // poll() zwraca i usuwa element z początku kolejki
+//                Dish element = dishesQueue.poll(); // poll() zwraca i usuwa element z początku kolejki
 //                System.out.println("Usunięto: " + element);
                 clientCount--;
 

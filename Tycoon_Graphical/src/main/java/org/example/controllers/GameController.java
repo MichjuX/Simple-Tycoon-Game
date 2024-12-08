@@ -76,7 +76,6 @@ public class GameController implements Callback {
     @Override
     public void handleBuyDecoration(int price, int decorationId) {
         gameService.buyDecoration(price, decorationId);
-        gameView.displayDecoration(decorationId);
     }
 
 

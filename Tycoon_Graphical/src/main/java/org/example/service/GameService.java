@@ -69,7 +69,10 @@ public class GameService {
         updateView();
     }
     public void buyDecoration(int price, int decorationId) {
-        player.buyDecoration(price, decorationId);
+        if (player.buyDecoration(price, decorationId)==0){
+            _swingView.displayDecoration(decorationId);
+        }
+
         updateView();
     }
     private void updateView() {
@@ -119,9 +122,18 @@ public class GameService {
             }
         }
     }
+    private void paintObjects() {
+        int[] decorations = player.getDecorations();
+        for (int i = 0; i < decorations.length; i++) {
+            if (decorations[i] == 1) {
+                _swingView.displayDecoration(i);
+            }
+        }
+    }
 
     public void startGameLoop() throws IOException {
         checkForWorkers();
+        paintObjects();
         updateView();
         updateViewWorkers();
         startGameTick();

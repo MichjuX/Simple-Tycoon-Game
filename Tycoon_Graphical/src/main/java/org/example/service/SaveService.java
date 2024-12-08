@@ -26,8 +26,8 @@ public class SaveService {
                 savegame.write("Worker:,"
                         + worker.getName() + ","
                         + worker.getLevel() + ","
-                        + worker.getIncome() + ","
-                        + worker.getUpgradeCost() + ","
+                        + worker.getBaseIncome() + ","
+                        + worker.getBaseUpgradeCost() + ","
                         + worker.getId() + "\n");
             }
             savegame.write("Player:,"
@@ -40,7 +40,12 @@ public class SaveService {
                     + player.getPrefixNumber()[0] + ","
                     + player.getPrefixNumber()[1] + ","
                     + player.getPrefixNumber()[2] + ","
-                    + player.getDisplayedProfit() + "\n");
+                    + player.getDisplayedProfit() + ","
+                    + player.getDecorations()[0] + ","
+                    + player.getDecorations()[1] + ","
+                    + player.getDecorations()[2] + ","
+                    + player.getDecorations()[3] + ","
+                    + player.getDecorations()[4] + "\n");
             Queue<Dish> queue = queueController.getQueue();
             if (!queue.isEmpty()) {
                 savegame.write("Queue:,");
@@ -108,6 +113,13 @@ public class SaveService {
                             Integer.parseInt(parts[9])
                     };
                     player.setDisplayedProfit(Double.parseDouble(parts[10]));
+                    player.setDecorations(new int[]{
+                            Integer.parseInt(parts[11]),
+                            Integer.parseInt(parts[12]),
+                            Integer.parseInt(parts[13]),
+                            Integer.parseInt(parts[14]),
+                            Integer.parseInt(parts[15])
+                    });
 
                     // Ustawienie stanu gracza
                     player.setBalance(balance);

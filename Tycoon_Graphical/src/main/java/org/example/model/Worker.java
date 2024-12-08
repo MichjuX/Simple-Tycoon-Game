@@ -16,10 +16,9 @@ public class Worker {
         this.id = id;
     }
     public Worker(double baseIncome, double upgradeCost, String name, int id, int level) {
-        this.level = 1;
-        this.baseIncome = baseIncome; // Starting income
+        this.baseIncome = baseIncome;
 
-        this.upgradeCost = upgradeCost; // Cost to upgrade
+        this.upgradeCost = upgradeCost;
         this.name = name;
         this.id = id;
         this.level = level;
@@ -34,6 +33,12 @@ public class Worker {
     }
     public String getName(){
         return name;
+    }
+    public double getBaseIncome(){
+        return baseIncome;
+    }
+    public double getBaseUpgradeCost(){
+        return upgradeCost;
     }
 
     public void upgrade() {
