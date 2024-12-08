@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class ResourceLoader {
     private ResourceLoader() {
@@ -19,12 +20,14 @@ public class ResourceLoader {
 
     public static Font loadFont(String path, float size) {
         try {
+            InputStream fontStream = ResourceLoader.class.getResourceAsStream(path);
             return Font.createFont(Font.TRUETYPE_FONT, new File(path)).deriveFont(size);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
 
     public static ImageIcon loadScaledImage(String path, int width, int height) {
         ImageIcon icon = new ImageIcon(path);

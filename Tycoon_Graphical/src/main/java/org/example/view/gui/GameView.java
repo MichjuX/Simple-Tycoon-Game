@@ -501,7 +501,7 @@ public class GameView extends JPanel {
     ///////////////////////////////////////////////////////////////
     // Sklep
     private void createShopPanel(Font tinySmallest) {
-        ImageIcon backgroundImage = ResourceLoader.loadScaledImage("src/main/resources/images/backgrounds/buy_menu.png", 250, 270);
+        ImageIcon backgroundImage = ResourceLoader.loadScaledImage("src/main/resources/images/backgrounds/buy_menu.png", 250, 250);
         shopPanel = new BackgroundPanel(backgroundImage.getImage());
 
         shopPanel.setLayout(new BoxLayout(shopPanel, BoxLayout.Y_AXIS));
