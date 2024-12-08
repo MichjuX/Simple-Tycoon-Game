@@ -12,6 +12,7 @@ import org.example.view.console.LeaveGame;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameService {
@@ -33,6 +34,7 @@ public class GameService {
     private NavigationHandler mainNavigation;
     private NavigationHandler hiringNavigation;
     private GameController controller;
+    int[] displayedObjects = {0,0};
 
     // Swing
 //    public GameService(org.example.view.gui.GameView view) {
@@ -66,10 +68,24 @@ public class GameService {
         player.buy(workerTypeId); // Kupno pracownika
         updateView();
     }
+    public void buyDecoration(int price, int decorationId) {
+        player.buyDecoration(price, decorationId);
+        updateView();
+    }
     private void updateView() {
         _swingView.updateBalance(player.getBalance(), player);
         _swingView.updateProfit(player.getDisplayedProfit());
         _swingView.updateWorkerLists(player.get_workers());
+        checkForWorkers();
+
+        List<Worker> workers = player.get_workers();
+        if (!workers.isEmpty()) {
+            for (int i = 0; i < displayedObjects.length; i++) {
+                if (displayedObjects[i] == 1) {
+                    _swingView.displayObject(i);
+                }
+            }
+        }
     }
     public void changeTimeSpeed(String change){
 
@@ -88,14 +104,31 @@ public class GameService {
         System.out.println("changeTimeSpeed " + change + " " + _timeSpeed + " " + _timeSpeedFactor);
         _swingView.updateSpeedLabel(_timeSpeedFactor);
     }
+    private void checkForWorkers() {
 
-    public void startGameLoop() {
+        List<Worker> workers = player.get_workers();
+        System.out.println(workers);
+        for (Worker worker : workers) {
+            switch (worker.getName()) {
+                case "Szef kuchni":
+                    displayedObjects[0] = 1;
+                    break;
+                case "Marketingowiec":
+                    displayedObjects[1] = 1;
+                    break;
+            }
+        }
+    }
+
+    public void startGameLoop() throws IOException {
+        checkForWorkers();
         updateView();
         updateViewWorkers();
         startGameTick();
         _swingView.updateWorkerLists(player.get_workers());
         mainNavigation.setMaxOptions(player.getWorkersCount() + 1);
         startRefreshThread();
+
 
 
 

@@ -22,8 +22,14 @@ public class GameView extends JPanel {
     JLabel _dayCustomers = new JLabel();
     JLabel _satisfaction = new JLabel();
     JLabel _speedLabel = new JLabel();
+    JButton buyTipJarButton;
+    JButton buyPainting;
+    private JButton openShopButton;
+    private JPanel shopPanel;
+    private JButton closeShopButton;
     private GameService gameService;
     private GameController controller;
+    private BackgroundPanel backgroundPanel;
     private JButton _upgradeButton = new JButton("Upgrade");
     private final String[] _prefixList = {"", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "O", "N", "D"};
     private JList<String> _workerList = new JList<>();
@@ -127,6 +133,7 @@ public class GameView extends JPanel {
 
 
         BackgroundPanel backgroundPanel = new BackgroundPanel(pixelArtImage);
+        this.backgroundPanel = backgroundPanel;
         backgroundPanel.setLayout(null); // Wyłącz domyślny layout, aby ustawiać komponenty ręcznie
         this.setLayout(new BorderLayout()); // Ustawienie odpowiedniego layoutu
         this.add(backgroundPanel, BorderLayout.CENTER); // Dodanie panelu z tłem
@@ -327,6 +334,9 @@ public class GameView extends JPanel {
 
         speedDecrease.addActionListener(e -> controller.decreaseGameSpeed());
 
+        createShopPanel();
+        createOpenShopButton();
+
         this.setVisible(true);
 
         System.out.println("Komponenty dodane: " + this.getComponents().length);
@@ -485,7 +495,90 @@ public class GameView extends JPanel {
     }
     ///////////////////////////////////////////////////////////////
 
+    ///////////////////////////////////////////////////////////////
+    // Sklep
+    private void createShopPanel() {
+        shopPanel = new JPanel();
+        shopPanel.setLayout(new BoxLayout(shopPanel, BoxLayout.Y_AXIS));
+        shopPanel.setBackground(Color.WHITE);
+        shopPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
+        // Dodaj przyciski do kupowania przedmiotów
+        buyTipJarButton = new JButton("Słoik na tipy - 10000$");
+        buyPainting = new JButton("Kup obaz - 50000$");
+
+        buyTipJarButton.addActionListener(e -> controller.handleBuyDecoration(10000, 0));
+        buyPainting.addActionListener(e -> controller.handleBuyDecoration(50000, 1));
+
+        shopPanel.add(buyTipJarButton);
+        shopPanel.add(buyPainting);
+
+        // Dodaj przycisk zamknięcia sklepu
+        closeShopButton = new JButton("Zamknij Sklep");
+        closeShopButton.addActionListener(e -> hideShopPanel());
+        shopPanel.add(closeShopButton);
+
+        // Ukryj panel sklepu na początku
+        shopPanel.setVisible(false);
+        backgroundPanel.add(shopPanel);
+    }
+    private void createOpenShopButton() {
+        openShopButton = new JButton("Sklep z dekoracjami");
+        openShopButton.addActionListener(e -> showShopPanel());
+        openShopButton.setBounds(100, 100, 300, 30); // Dostosuj pozycję według potrzeb
+        backgroundPanel.add(openShopButton);
+    }
+    private void showShopPanel() {
+        shopPanel.setVisible(true);
+        shopPanel.setBounds(500, 200, 200, 200); // Dostosuj pozycję i rozmiar według potrzeb
+    }
+
+    private void hideShopPanel() {
+        shopPanel.setVisible(false);
+    }
+
+    public void displayDecoration(int id){
+        System.out.println("wyświetlam");
+        switch(id){
+            case 0:
+                JLabel tipJar = ResourceLoader.createAnimatedLabel("src/main/resources/images/waiter.png", 150, 150);
+                tipJar.setBounds(1000, 434, 150, 150);
+                backgroundPanel.add(tipJar);
+                buyTipJarButton.setVisible(false);
+
+                break;
+            case 1:
+                JLabel painting = ResourceLoader.createAnimatedLabel("src/main/resources/images/painting.gif", 150, 150);
+                painting.setBounds(1200, 434, 150, 150);
+                backgroundPanel.add(painting);
+                buyPainting.setVisible(false);
+                break;
+        }
+        backgroundPanel.revalidate();
+        backgroundPanel.repaint();
+    }
+    ///////////////////////////////////////////////////////////////
+
+    public void displayObject(int objectIndex) {
+        System.out.println("wyświetlam dekorację");
+        switch(objectIndex){
+            case 0:
+
+                JLabel bossLabel = ResourceLoader.createAnimatedLabel("src/main/resources/images/boss.gif", 250, 250);
+                bossLabel.setBounds(1100, 434, 250, 250);
+                backgroundPanel.add(bossLabel);
+                break;
+            case 1:
+                System.out.println("wyświetlam kurwa");
+                JLabel marketer = ResourceLoader.createAnimatedLabel("src/main/resources/images/marketer.gif", 400, 251);
+                marketer.setBounds(1450, 444, 400, 251);
+                backgroundPanel.add(marketer);
+                break;
+
+        }
+        backgroundPanel.revalidate();
+        backgroundPanel.repaint();
+    }
 
     public void updateBalance(double balance, Player player) {
         _balance.setText(String.format(String.format("Stan konta: %.2f%s$",
@@ -548,7 +641,6 @@ public class GameView extends JPanel {
                     break;
                 case "Kelner":
                     kelnerzyModel.addElement(worker);
-                    System.out.println("znany typ pracownika: " + worker.getName());
                     break;
                 case "Szef kuchni":
                     szefowieKuchniModel.addElement(worker);

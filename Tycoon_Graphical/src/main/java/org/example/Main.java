@@ -4,10 +4,11 @@ import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
-import com.googlecode.lanterna.terminal.swing.TerminalEmulatorAutoCloseTrigger;
 import org.example.controllers.GameController;
+import org.example.controllers.MainMenuController;
 import org.example.service.GameService;
-import org.example.savegame.SaveController;
+import org.example.service.SaveService;
+import org.example.service.MainMenuService;
 import org.example.view.console.GameMenu;
 import org.example.view.console.GameSecondView;
 import org.example.view.console.LeaveGame;
@@ -44,11 +45,18 @@ public class Main {
             frame.setLayout(new CardLayout());
 
             CardLayout cardLayout = (CardLayout) frame.getContentPane().getLayout();
+            MainMenuController mainMenuController = new MainMenuController();
+            MainMenuService mainMenuService = new MainMenuService();
 
             MainMenuView mainMenuView = new MainMenuView(
-                    () -> startGame(frame, cardLayout, false),
-                    () -> startGame(frame, cardLayout, true)
+                    () -> startGame(frame, cardLayout, mainMenuService, false),
+                    () -> startGame(frame, cardLayout, mainMenuService, true),
+                    mainMenuController
+
             );
+
+            mainMenuController.setService(mainMenuService);
+            mainMenuController.setView(mainMenuView);
 
             frame.getContentPane().add(mainMenuView, "MainMenu");
             cardLayout.show(frame.getContentPane(), "MainMenu");
@@ -57,7 +65,7 @@ public class Main {
         });
     }
 
-    private static void startGame(JFrame frame, CardLayout cardLayout, boolean loadGame) {
+    private static void startGame(JFrame frame, CardLayout cardLayout, MainMenuService mainMenuService ,boolean loadGame) {
         // Lanterna
         try {
             // Tworzenie terminala
@@ -69,6 +77,15 @@ public class Main {
             Terminal terminal = terminalFactory.createTerminal();
             TerminalScreen screen = new TerminalScreen(terminal);
             screen.startScreen();
+            int mode = mainMenuService.getMode();
+            System.out.println("Mode: " + mode);
+            if(mode == 0){
+                terminal.close();
+            }
+            if(mode == 1){
+                frame.setVisible(false);
+            }
+
 
             // Ustawienia menu
             org.example.view.console.GameView lanternaView = new org.example.view.console.GameView(screen);
@@ -94,7 +111,7 @@ public class Main {
 
         if (loadGame) {
             gameView.setService(gameService);
-            SaveController saveController = new SaveController(
+            SaveService saveController = new SaveService(
                     gameService.getPlayer(), gameService.getQueueService()
             );
             saveController.loadGame();
@@ -107,7 +124,7 @@ public class Main {
                 () -> cardLayout.show(frame.getContentPane(), "MainMenu"),
                 () -> {
                     if (gameService != null) {
-                        SaveController saveController = new SaveController(
+                        SaveService saveController = new SaveService(
                                 gameService.getPlayer(), gameService.getQueueService()
                         );
                         saveController.saveGame();

@@ -17,4 +17,5 @@ public interface Callback {
     void increaseGameSpeed();
 
     void handleWorkerUpgrade(Worker worker);
+    void handleBuyDecoration(int price, int decorationId);
 }

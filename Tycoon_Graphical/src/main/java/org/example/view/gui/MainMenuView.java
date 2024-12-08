@@ -1,5 +1,7 @@
 package org.example.view.gui;
 
+import org.example.controllers.MainMenuController;
+import org.example.service.MainMenuService;
 import org.example.service.ResourceLoader;
 
 import javax.swing.*;
@@ -8,7 +10,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class MainMenuView extends JPanel {
-    public MainMenuView(Runnable startNewGameCallback, Runnable loadGameCallback) {
+    MainMenuController controller;
+    JButton modeButton;
+    public MainMenuView(Runnable startSwingGameCallback,
+                        Runnable loadSwingGameCallback,
+                        MainMenuController controller
+    ){
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(Color.LIGHT_GRAY);
 
@@ -30,19 +37,36 @@ public class MainMenuView extends JPanel {
         // Configure buttons
         JButton newGameButton = new JButton("Nowa Gra", button);
         configureButton(newGameButton, tinyMedium, button_hover, 1395, 500, 450, 90, button, backgroundPanel);
-        newGameButton.addActionListener(e -> startNewGameCallback.run());
+        newGameButton.addActionListener(e -> startSwingGameCallback.run());
 
         JButton loadGameButton = new JButton("Wczytaj Grę", button);
-        configureButton(loadGameButton, tinyMedium, button_hover, 1395, 650, 450, 90, button, backgroundPanel);
-        loadGameButton.addActionListener(e -> loadGameCallback.run());
+        configureButton(loadGameButton, tinyMedium, button_hover, 1395, 610, 450, 90, button, backgroundPanel);
+        loadGameButton.addActionListener(e -> loadSwingGameCallback.run());
+
+        modeButton= new JButton("Tyb gry: Graficzny", button);
+        configureButton(modeButton, tinyMedium, button_hover, 1395, 720, 450, 90, button, backgroundPanel);
+        modeButton.addActionListener(e -> controller.handleChangeMode());
 
         JButton exitButton = new JButton("Wyjdź", button);
-        configureButton(exitButton, tinyMedium, button_hover, 1395, 800, 450, 90, button, backgroundPanel);
+        configureButton(exitButton, tinyMedium, button_hover, 1395, 830, 450, 90, button, backgroundPanel);
         exitButton.addActionListener(e -> System.exit(0));
 
         this.add(backgroundPanel, BorderLayout.CENTER);
     }
-
+    public void changeMode(int mode){
+        System.out.println("View change mode - " + mode);
+        switch (mode){
+            case 0:
+                modeButton.setText("Tryb gry: Graficzny");
+                break;
+            case 1:
+                modeButton.setText("Tryb gry: Tekstowy");
+                break;
+            case 2:
+                modeButton.setText("Tryb gry: Graficzny + Tekstowy");
+                break;
+        }
+    }
     private void configureButton(JButton button,
                                  Font tinySmall,
                                  ImageIcon buttonHoverIcon,

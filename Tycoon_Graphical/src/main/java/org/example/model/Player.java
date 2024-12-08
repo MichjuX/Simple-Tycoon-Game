@@ -17,6 +17,7 @@ public class Player {
     private int[] _workersCount = {1,1,0,0};
     private int _currentDay = 1;
     private int[] _currentHour = {0,0};
+    private int[] decorations = {0,0,0,0,0};
 
     public Player() {
         this.balance = 10000; // Starting balance
@@ -219,6 +220,12 @@ public class Player {
         }
     }
 
+    public void buyDecoration(int price, int decorationId){
+        if (calculatePrice(price) <= balance) {
+            balance -= calculatePrice(price);
+            decorations[decorationId]++;
+        }
+    }
 }
 
 

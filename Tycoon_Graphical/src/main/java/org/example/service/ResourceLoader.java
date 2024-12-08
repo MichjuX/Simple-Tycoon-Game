@@ -7,7 +7,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class ResourceLoader {
-    private ResourceLoader() {} // Prevent instantiation
+    private ResourceLoader() {
+    } // Prevent instantiation
 
     public static ImageIcon[] loadImageIcons(String path, int width, int height) {
         ImageIcon icon = new ImageIcon(path);
@@ -30,6 +31,7 @@ public class ResourceLoader {
         Image image = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(image);
     }
+
     public static ImageIcon loadImage(String path) {
         return new ImageIcon(path);
     }
@@ -40,7 +42,7 @@ public class ResourceLoader {
         JLabel label = new JLabel(icon) {
             @Override
             protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
+//                super.paintComponent(g);
                 // Rysowanie animowanego GIF-a w większym rozmiarze
                 g.drawImage(icon.getImage(), 0, 0, width, height, this);
             }
@@ -48,4 +50,6 @@ public class ResourceLoader {
         label.setPreferredSize(new Dimension(width, height));
         return label;
     }
+
 }
+

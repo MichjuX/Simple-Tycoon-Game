@@ -51,6 +51,7 @@ public class GameController implements Callback {
         }
     }
 
+
     @Override
     public void handleSaveGame() {
         if (saveGameCallback != null) {
@@ -70,6 +71,12 @@ public class GameController implements Callback {
         } else {
             System.out.println("Worker not found in the global list.");
         }
+    }
+
+    @Override
+    public void handleBuyDecoration(int price, int decorationId) {
+        gameService.buyDecoration(price, decorationId);
+        gameView.displayDecoration(decorationId);
     }
 
 

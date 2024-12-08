@@ -1,22 +1,20 @@
-package org.example.savegame;
+package org.example.service;
 
 import org.example.service.QueueService;
 import org.example.model.Customer;
 import org.example.model.Dish;
 import org.example.model.Player;
 import org.example.model.Worker;
-import org.example.view.console.GameSecondView;
-import org.example.view.console.GameView;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-public class SaveController {
+public class SaveService {
     Player player;
     QueueService queueController;
-    public SaveController(Player player, QueueService queueController) {
+    public SaveService(Player player, QueueService queueController) {
         this.player = player;
         this.queueController = queueController;
     }
