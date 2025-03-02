@@ -1,26 +1,26 @@
 # Restaurant Tycoon
-## Opis aplikacji
-Restaurant Tycoon to typowa gra tycoon gdzie gracz prowadzi swój własny biznes i rozwija własną markę aby zarabiać jak najwięcej pieniędzy. 
-Restauracja serwuje jedno pyszne danie, które przygotowywane jest nawet wtedy, kiedy nikt nic nie zamówił - tak aby klient mógł otrzymać je od razu po zamówieniu. W ten sposób restuaracja dba o dobrą renomę i zadowolenie klientów - kto nie chciałby od razu dostać pysznego dania? 
+## Application Description
+Restaurant Tycoon is a typical tycoon game where the player runs their own business and builds their own brand to earn as much money as possible.  
+The restaurant serves one delicious dish, which is prepared even when no one has ordered it—so that the customer can receive it immediately after ordering. This way, the restaurant maintains a good reputation and customer satisfaction—who wouldn’t want to get a delicious dish right away?
 
-## Funkcjonalności
-- Wiele widoków.
-- Klienci przychodzą w czasie rzeczywistym.
-- Każdy klient obsłużony przez kelnera daje pieniądze.
-- Niezależni klienci, kelnerzy i kucharze oparci na wątkach.
-- Mechanika tworzenia i wydawania dań oparta na wątkach.
-- Widok zatrudniania pracowników, menu startowe oraz menu wyjścia z gry (ESC).
-- Zapis dnych gry do pliku.
-- Dynamiczne odświeżanie ekranu.
-- Dynamiczna zmiana przedrostka stanu konta oraz dochodu w celu zapobiegnięcia przekroczeniu maksymalnej wartości dla zmiennych.
-- Dynamiczne zarządzanie stanem konta oraz wyliczanie aktualnego zarobku ($/danie).
+## Features
+- Multiple views.
+- Customers arrive in real-time.
+- Each customer served by a waiter generates money.
+- Independent customers, waiters, and chefs based on threads.
+- Dish creation and serving mechanics based on threads.
+- Employee hiring view, start menu, and exit game menu (ESC).
+- Saving game data to a file.
+- Dynamic screen refreshing.
+- Dynamic prefix change for the account balance and income to prevent exceeding the maximum value for variables.
+- Dynamic management of the account balance and calculation of current earnings ($/dish).
 
-## Opis działania gry
-- Gracz wybiera czy chce zacząć nową grę, czy chce wczytać istniejącą grę.
-- Gracz startuje grę z pewnym stanem konta oraz jednym zatrudnionym kucharzem i kelnerem.
-- W celu zwiększenia przychodu gracz może ulepszać pracowników (zwiększa ilość $/danie) lub zatrudniać nowych pracowników w celu przyspieszenia produkcji:
-  - Zatrudnienie kucharza: Zwiększa liczbę produkowanych dań;
-  - Zatrudnienie kelnera: Zwiększa liczbę wydawanych dań;
-  - Zatrudnienie szefa kuchni: Zwiększa prędkość produkcji dań;
-  - Zatrudnienie marketingowca: Zwiększa zainteresowanie klientów lokalem (klienci częściej przychodzą).
-- ### UWAGA! Wartość gotowego dania po ulepszeniu pracownika nie zwiększa się! Wyprodukowane dania mają wartość taką jak w czasie ich produkcji. Gra wymaga poprawnego zarządzania ilością pracowników. W ten sposób zatrudnianie zbyt wielu kucharzy lub zbyt małej ilości kelnerów jest karane (dania stygną).
+## Gameplay Description
+- The player chooses whether to start a new game or load an existing one.
+- The player starts the game with a certain account balance and one hired chef and waiter.
+- To increase revenue, the player can upgrade employees (increases $/dish) or hire new employees to speed up production:
+  - Hiring a chef: Increases the number of dishes produced;
+  - Hiring a waiter: Increases the number of dishes served;
+  - Hiring a head chef: Increases the speed of dish production;
+  - Hiring a marketer: Increases customer interest in the restaurant (customers come more often).
+- ### NOTE! The value of a ready-made dish does not increase after upgrading an employee! Dishes produced have the same value as at the time of their production. The game requires proper management of the number of employees. In this way, hiring too many chefs or too few waiters is penalized (dishes get cold).
